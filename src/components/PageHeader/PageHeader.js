@@ -6,7 +6,7 @@ import bloodIcon from "../../assets/bloodIcon.png";
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  height: 50px;
+  height: ${({ theme }) => theme.components.headerHight};
   position: fixed;
   left: 0;
   top: 0;

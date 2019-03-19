@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
-import { Route, Switch, Redirect } from "react-router-dom";
 
 import { theme } from "./utils/theme";
 import { PageHeader } from "./components/PageHeader/PageHeader";
-import MobileSideDrawer from "./components/MobileSideDrawer/MobileSideDrawer";
+import { RouteMobileSidebar, RoutePageContent } from "./routes";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -20,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const PageContent = styled.div`
-  margin-top: 50px;
+  margin-top: ${({ headerHight }) => headerHight};
 `;
 
 const App = () => {
@@ -30,43 +29,18 @@ const App = () => {
   const toggleMobileSidebarHandler = () => {
     toggleMobileSidebar(!showMobileSidebar);
   };
-
+  
   return (
     <ThemeProvider theme={theme}>
       <>
         <GlobalStyle />
         <PageHeader toggleSidebar={toggleMobileSidebarHandler} />
-        <Route
-          path="/:page"
-          render={() => {
-            return (
-              <MobileSideDrawer
-                show={showMobileSidebar}
-                toggleSidebar={toggleMobileSidebarHandler}
-              />
-            );
-          }}
+        <RouteMobileSidebar
+          showMobileSidebar={showMobileSidebar}
+          toggleMobileSidebarHandler={toggleMobileSidebarHandler}
         />
-        <PageContent>
-          <Route
-            path="/:page"
-            render={() => {
-              return (
-                <Switch>
-                  <Route path="/home" render={() => <h1>HOME</h1>} />
-                  <Route path="/user" render={() => <h1>USER</h1>} />
-                  <Route path="/new-test" render={() => <h1>LOAD TESTS</h1>} />
-                  <Route
-                    path="/results"
-                    render={() => <h1>PREVIOUS RESULTS</h1>}
-                  />
-                  <Route path="/sign-out" render={() => <h1>SIGN OUT</h1>} />
-                  <Route path="sign-in" render={() => <h1>SIGN In</h1>} />
-                  <Redirect from="/" to="/home" />
-                </Switch>
-              );
-            }}
-          />
+        <PageContent headerHight={theme.components.headerHight} >
+          <RoutePageContent />
         </PageContent>
       </>
     </ThemeProvider>
