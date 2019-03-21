@@ -1,3 +1,3 @@
 export const components = {
-    headerHight: '50px',
+    headerHeight: '50px',
   };

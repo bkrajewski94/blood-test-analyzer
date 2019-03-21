@@ -9,7 +9,6 @@ const ElementWrapper = styled.div`
     padding-top: ${({ theme, withSpacingTop }) => withSpacingTop ? theme.spacingBig : theme.spacingSmall};
     padding-bottom: ${({ theme, withSpacingBottom }) => withSpacingBottom ? theme.spacingBig : theme.spacingSmall};
     color: ${({ theme }) => theme.colors.trout}; 
-    opacity: ${({ isActive }) => isActive ? `1` : '0.7'};;
     border-bottom: ${({ theme, withBorder }) => withBorder ? `1px solid ${theme.colors.athensGray}` : 'none'};
     cursor: pointer;
 
@@ -24,9 +23,9 @@ const IconWrapper = styled.div`
 
 
 
-export const MenuElement = ({icon, text, withSpacingBottom, withSpacingTop, withBorder, isActive, onClick}) => {
+export const MenuElement = ({icon, text, withSpacingBottom, withSpacingTop, withBorder,}) => {
     return(
-    <ElementWrapper withSpacingBottom={withSpacingBottom} withSpacingTop={withSpacingTop} withBorder={withBorder} isActive={isActive} onClick={onClick}>
+    <ElementWrapper withSpacingBottom={withSpacingBottom} withSpacingTop={withSpacingTop} withBorder={withBorder} >
         <IconWrapper>{icon}</IconWrapper>
         {text}
     </ElementWrapper>
@@ -39,6 +38,4 @@ MenuElement.propTypes = {
     withSpacingBottom: PropTypes.bool,
     withSpacingTop: PropTypes.bool,
     withBorder: PropTypes.bool,
-    isActive: PropTypes.bool,
-    onClick: PropTypes.func.isRequired
 }

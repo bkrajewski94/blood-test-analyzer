@@ -6,7 +6,7 @@ import bloodIcon from "../../assets/bloodIcon.png";
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  height: ${({ theme }) => theme.components.headerHight};
+  height: ${({ theme }) => theme.components.headerHeight};
   position: fixed;
   left: 0;
   top: 0;
@@ -21,10 +21,8 @@ const ButtonBar = styled.div`
   height: 4px;
   border-radius: 2px;
   background-color: ${({ theme }) => theme.colors.white};
-`;
-
-const ButtonBarWithMargin = styled(ButtonBar)`
   margin-top: ${({ theme }) => theme.spacingMiniscule};
+  margin-bottom: ${({ theme }) => theme.spacingMiniscule};
 `;
 
 const ButtonBox = styled.div`
@@ -48,8 +46,8 @@ export const PageHeader = ({ toggleSidebar }) => {
     <HeaderWrapper>
       <ButtonBox onClick={toggleSidebar}>
         <ButtonBar />
-        <ButtonBarWithMargin />
-        <ButtonBarWithMargin />
+        <ButtonBar />
+        <ButtonBar />
       </ButtonBox>
       <Logo bgImage={bloodIcon}/>
     </HeaderWrapper>

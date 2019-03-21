@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
+import reset from 'styled-reset'
+
 
 import { theme } from "./utils/theme";
 import { PageHeader } from "./components/PageHeader/PageHeader";
-import { RouteMobileSidebar, RoutePageContent } from "./routes";
+import { RoutePageContent } from "./routes";
+import MobileSideDrawer from "./components/MobileSideDrawer/MobileSideDrawer";
 
 const GlobalStyle = createGlobalStyle`
   body {
+    ${reset};
     padding: 0;
     margin: 0;
     font-family: 'Assistant', sans-serif;
@@ -19,11 +23,10 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const PageContent = styled.div`
-  margin-top: ${({ headerHight }) => headerHight};
+  margin-top: ${({ theme }) => theme.components.headerHeight};
 `;
 
 const App = () => {
-  const [initialized, setInitialized] = useState(false);
   const [showMobileSidebar, toggleMobileSidebar] = useState(false);
 
   const toggleMobileSidebarHandler = () => {
@@ -35,11 +38,8 @@ const App = () => {
       <>
         <GlobalStyle />
         <PageHeader toggleSidebar={toggleMobileSidebarHandler} />
-        <RouteMobileSidebar
-          showMobileSidebar={showMobileSidebar}
-          toggleMobileSidebarHandler={toggleMobileSidebarHandler}
-        />
-        <PageContent headerHight={theme.components.headerHight} >
+        <MobileSideDrawer show={showMobileSidebar} toggleSidebar={toggleMobileSidebarHandler}/>
+        <PageContent>
           <RoutePageContent />
         </PageContent>
       </>
