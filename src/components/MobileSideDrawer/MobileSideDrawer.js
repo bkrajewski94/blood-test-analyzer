@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { withRouter, NavLink } from "react-router-dom";
+import { useEffect } from 'react';
 
 import { texts } from "../../utils/texts";
 import { BackDrop } from "../BackDrop/BackDrop";
@@ -58,9 +59,12 @@ const MenuItem = styled(NavLink)`
 `;
 
 const MobileSideDrawer = ({ show, toggleSidebar, ...props }) => {
-  props.history.listen(() => {
-    toggleSidebar();
-  });
+
+  useEffect(() => {
+    props.history.listen(() => {
+      toggleSidebar();
+    });
+  },[]);
 
   return ReactDOM.createPortal(
     <>

@@ -10,14 +10,13 @@ import { RoutePageContent } from "./routes";
 import MobileSideDrawer from "./components/MobileSideDrawer/MobileSideDrawer";
 
 const GlobalStyle = createGlobalStyle`
+  ${reset};
+
   body {
-    ${reset};
-    padding: 0;
-    margin: 0;
-    font-family: 'Assistant', sans-serif;
+    font-family: ${({ theme }) => theme.fontDefault};;
   }
 
-  *, *::before, *::after{
+  *, *::before, *::after {
     box-sizing: border-box;
   }
 `;

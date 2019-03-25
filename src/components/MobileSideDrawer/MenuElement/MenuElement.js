@@ -23,7 +23,7 @@ const IconWrapper = styled.div`
 
 
 
-export const MenuElement = ({icon, text, withSpacingBottom, withSpacingTop, withBorder,}) => {
+export const MenuElement = ({icon, text, withSpacingBottom, withSpacingTop, withBorder}) => {
     return(
     <ElementWrapper withSpacingBottom={withSpacingBottom} withSpacingTop={withSpacingTop} withBorder={withBorder} >
         <IconWrapper>{icon}</IconWrapper>
