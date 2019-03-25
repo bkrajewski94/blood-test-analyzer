@@ -11,7 +11,6 @@ const ElementWrapper = styled.div`
     color: ${({ theme }) => theme.colors.trout}; 
     border-bottom: ${({ theme, withBorder }) => withBorder ? `1px solid ${theme.colors.athensGray}` : 'none'};
     cursor: pointer;
-
 `;
 
 const IconWrapper = styled.div`
