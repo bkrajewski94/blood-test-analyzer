@@ -27,6 +27,7 @@ const ButtonBar = styled.div`
 
 const ButtonBox = styled.div`
   margin-left: ${({ theme }) => theme.spacingNormal};
+  cursor: pointer;
 `;
 
 const Logo = styled.div`
@@ -56,5 +57,5 @@ export const PageHeader = ({ toggleSidebar }) => {
 
 
 PageHeader.propTypes = {
-  toggleSidebar: PropTypes.func
+  toggleSidebar: PropTypes.func.isRequired
 }

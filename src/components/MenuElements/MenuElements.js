@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { NavLink } from "react-router-dom";
 
 const ElementWrapper = styled.div`
     display: flex;
@@ -20,7 +21,28 @@ const IconWrapper = styled.div`
     margin-left: ${({ theme }) => theme.spacingBig};
 `;
 
+const MenuItemComponent = styled(NavLink)`
+  text-decoration: none;
+  display: block;
+  opacity: 0.7;
+  &:hover {
+    opacity: 0.9;
+  }
+  &.active {
+    opacity: 1;
+  }
+`;
 
+export const MenuItem = ({to, children}) => (
+    <MenuItemComponent to={to}>
+        {children}
+    </MenuItemComponent>
+)
+
+
+MenuItem.propTypes = {
+    to: PropTypes.string.isRequired,
+}
 
 export const MenuElement = ({icon, text, withSpacingBottom, withSpacingTop, withBorder}) => {
     return(
