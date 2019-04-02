@@ -15,5 +15,7 @@ export const theme = {
   fontDefault: "Assistant",
   fontHandWriting: "Courgette",
 
-  fontSizeBig: "1.5rem"
+  fontSizeBig: "1.5rem",
+
+  desktopWidth: 750
 };

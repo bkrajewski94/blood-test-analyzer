@@ -2,12 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import { withRouter, NavLink } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { useEffect } from 'react';
 
 import { texts } from "../../utils/texts";
 import { BackDrop } from "../BackDrop/BackDrop";
-import { MenuElement } from "./MenuElement/MenuElement";
+import { MenuElement, MenuItem } from "../MenuElements/MenuElements";
 import { ReactComponent as User } from "../../assets/user.svg";
 import { ReactComponent as Add } from "../../assets/add.svg";
 import { ReactComponent as Home } from "../../assets/home.svg";
@@ -20,11 +20,12 @@ const SideDrawer = styled.div`
   left: 0;
   height: 100vh;
   width: 75%;
+  max-width: 250px;
   background-color: ${({ theme }) => theme.colors.white};
   transition: transform 0.3s ease-out;
   transform: translateX(${({ show }) => (show ? "0" : "-100%")});
   z-index: 20;
-  display: flex;
+  display: ${({ isAvailable }) => (isAvailable ? 'flex' : 'none')};
   flex-direction: column;
   justify-content: flex-start;
 `;
@@ -50,25 +51,17 @@ const Paragraph = styled.p`
   margin-bottom: 0;
 `;
 
-const MenuItem = styled(NavLink)`
-  text-decoration: none;
-  opacity: 0.7;
-  &.active {
-    opacity: 1;
-  }
-`;
-
-const MobileSideDrawer = ({ show, toggleSidebar, ...props }) => {
-
+const MobileSideDrawer = ({ show, toggleSidebar, isAvailable, ...props }) => {
   useEffect(() => {
-    props.history.listen(() => {
+    const subscribe = props.history.listen(() => {
       toggleSidebar();
     });
-  },[]);
+    return subscribe; //unsubscribes at every preupdate
+  },[show]);
 
   return ReactDOM.createPortal(
     <>
-      <SideDrawer show={show}>
+      <SideDrawer show={show} isAvailable={isAvailable}>
         <DrawerHeader>
           <Paragraph>Welcome!</Paragraph>
           <Paragraph handWritten withMargin>
@@ -100,14 +93,16 @@ const MobileSideDrawer = ({ show, toggleSidebar, ...props }) => {
           <MenuElement icon={<SignOut />} text={texts.sidebar.signOut} />
         </MenuItem>
       </SideDrawer>
-      {show && <BackDrop onClick={toggleSidebar} />}
+      {isAvailable && show && <BackDrop onClick={toggleSidebar} />}
     </>,
     document.querySelector("#mobileSideDrawer")
   );
 };
 
 MobileSideDrawer.propTypes = {
-  show: PropTypes.bool.isRequired
+  show: PropTypes.bool.isRequired,
+  toggleSidebar: PropTypes.func.isRequired,
+  isAvailable: PropTypes.bool.isRequired
 };
 
 export default withRouter(MobileSideDrawer);
