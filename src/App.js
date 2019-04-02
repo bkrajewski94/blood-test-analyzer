@@ -36,7 +36,7 @@ const App = () => {
   const [showMobileSidebar, toggleMobileSidebar] = useState((false));
   const [showDesktopSidebar, toggleDesktopSidebar] = useState(true);
   const [availableSidebar] = useState(() => {
-    if (!window.matchMedia("(min-width: 750px)").matches) {
+    if (window.innerWidth <= theme.desktopWidth) {
       return 'mobile'
     } else {
       return 'desktop'
@@ -59,10 +59,10 @@ const App = () => {
         <MobileSideDrawer
           show={showMobileSidebar}
           toggleSidebar={toggleMobileSidebarHandler}
-          isAvailable={availableSidebar === 'mobile' ? true : false}
+          isAvailable={availableSidebar === 'mobile'}
         />
         <PageContent>
-          <DesktopSideDrawer isOpen={showDesktopSidebar} isAvailable={availableSidebar === 'desktop' ? true : false}/>
+          <DesktopSideDrawer isOpen={showDesktopSidebar} isAvailable={availableSidebar === 'desktop'}/>
           <RoutePageContent />
         </PageContent>
       </>
