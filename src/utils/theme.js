@@ -15,7 +15,11 @@ export const theme = {
   fontDefault: "Assistant",
   fontHandWriting: "Courgette",
 
+  fontSizeSmall: "0.75rem",
+  fontSizeNormal: "1rem",
   fontSizeBig: "1.5rem",
 
-  desktopWidth: 750
+  desktopWidth: 750,
+
+  boxShadow: "0 4px 20px 0 rgba(37, 38, 94, 0.1)"
 };
