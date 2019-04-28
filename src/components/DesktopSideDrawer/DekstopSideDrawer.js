@@ -10,6 +10,7 @@ import { ReactComponent as Add } from "../../assets/add.svg";
 import { ReactComponent as Home } from "../../assets/home.svg";
 import { ReactComponent as List } from "../../assets/list.svg";
 import { ReactComponent as SignOut } from "../../assets/signOut.svg";
+import firebase from "../../firebase";
 
 const SideDrawerWrapper = styled.div`
   width: 230px;
@@ -17,16 +18,32 @@ const SideDrawerWrapper = styled.div`
   flex-basis: 230px;
   flex-shrink: 0;
   transition: margin 0.3s ease-out;
-  display: ${({ isAvailable }) => (isAvailable ? 'block' : 'none')};
+  display: block;
   margin-left: ${({ isOpen }) => (isOpen ? "0px" : "-230px")};
   background-color: ${({ theme }) => theme.colors.whiteLilac};
   border-right: ${({ theme }) => `1px solid ${theme.colors.athensGray}`};
   padding-top: ${({ theme }) => theme.spacingBig};
 `;
 
+const SignOutElement = styled(MenuElement)`
+  opacity: 0.7;
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
 const DesktopSideDrawer = props => {
+  const signOutHandler = () => {
+    firebase
+      .auth()
+      .signOut()
+      .catch(error => {
+        // console.log(error);
+      });
+  };
+
   return (
-    <SideDrawerWrapper isOpen={props.isOpen} isAvailable={props.isAvailable}>
+    <SideDrawerWrapper isOpen={props.isOpen}>
       <MenuItem to="/home">
         <MenuElement
           icon={<Home />}
@@ -55,20 +72,29 @@ const DesktopSideDrawer = props => {
           withSpacingBottom
         />
       </MenuItem>
-      <MenuItem to="/sign-out">
-        <MenuElement
+      {props.authStatus ? (
+        <SignOutElement
           icon={<SignOut />}
           text={texts.sidebar.signOut}
           withSpacingBottom
+          onClick={signOutHandler}
         />
-      </MenuItem>
+      ) : (
+        <MenuItem to="/login">
+          <MenuElement
+            icon={<SignOut />}
+            text={texts.sidebar.signIn}
+            withSpacingBottom
+          />
+        </MenuItem>
+      )}
     </SideDrawerWrapper>
   );
 };
 
 DesktopSideDrawer.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  isAvailable: PropTypes.bool.isRequired
+  authStatus: PropTypes.bool.isRequired
 };
 
 export default withRouter(DesktopSideDrawer);

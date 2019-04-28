@@ -1,10 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
+
 import { Input } from "../ui-components/Input/Input";
 
 const ErrorMessage = styled.p`
   font-size: ${({ theme }) => theme.fontSizeSmall};
-  color: ${({ theme }) => theme.colors.thunderbird};
+  color: ${({ theme }) => theme.colors.torchRed};
   margin-left: ${({ theme }) => theme.spacingTiny};
 `;
 
@@ -42,4 +44,12 @@ export const FormInput = ({
       {!isCorrect && <ErrorMessage>{form.errors[field.name]}</ErrorMessage>}
     </FormInputWrapper>
   );
+};
+
+
+FormInput.propTypes = {
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
+  field: PropTypes.object.isRequired,
+  form: PropTypes.object.isRequired,
 };

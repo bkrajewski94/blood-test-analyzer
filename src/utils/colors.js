@@ -6,6 +6,7 @@ export const colors = {
   frenchGray: "#bfc3c9", //gray
   trout: "#505763", //dark gray
   thunderbird: "#b71414", // red
+  torchRed: "#f41d1d", // light red
   japaneseLaurel: "#198201", //dark green
   japaneseLaurelDark: "#247c03",  //darker green
   portGore: "#25265E" // dark blue

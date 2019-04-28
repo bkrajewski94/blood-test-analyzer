@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 const InputComponent = styled.input`
   border: ${({ theme }) => `2px solid ${theme.colors.frenchGray}`};
@@ -31,4 +32,11 @@ export const Input = ({ type, placeholder, isCorrect, ...otherProps }) => {
         {...otherProps}
       />
   );
+};
+
+
+InputComponent.propTypes = {
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
+  isCorrect: PropTypes.bool
 };

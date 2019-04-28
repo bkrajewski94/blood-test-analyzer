@@ -33,20 +33,20 @@ const MenuItemComponent = styled(NavLink)`
   }
 `;
 
-export const MenuItem = ({to, children}) => (
-    <MenuItemComponent to={to}>
+export const MenuItem = ({to, children, ...otherProps}) => (
+    <MenuItemComponent to={to} {...otherProps}>
         {children}
     </MenuItemComponent>
 )
-
 
 MenuItem.propTypes = {
     to: PropTypes.string.isRequired,
 }
 
-export const MenuElement = ({icon, text, withSpacingBottom, withSpacingTop, withBorder}) => {
+
+export const MenuElement = ({icon, text, withSpacingBottom, withSpacingTop, withBorder, ...otherProps}) => {
     return(
-    <ElementWrapper withSpacingBottom={withSpacingBottom} withSpacingTop={withSpacingTop} withBorder={withBorder} >
+    <ElementWrapper withSpacingBottom={withSpacingBottom} withSpacingTop={withSpacingTop} withBorder={withBorder} {...otherProps}>
         <IconWrapper>{icon}</IconWrapper>
         {text}
     </ElementWrapper>
