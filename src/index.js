@@ -8,8 +8,10 @@ import reducers from "./reducers";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
+const store = createStore(reducers);
+
 ReactDOM.render(
-  <Provider store={createStore(reducers)}>
+  <Provider store={store}>
     <BrowserRouter>
       <App />
     </BrowserRouter>

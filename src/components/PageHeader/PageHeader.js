@@ -14,7 +14,6 @@ const HeaderWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.thunderbird};
   display: flex;
   align-items: center;
-  justify-content: space-between;
 `;
 
 const ButtonBar = styled.div`
@@ -41,6 +40,7 @@ const Logo = styled.div`
   height: 40px;
   border-radius: 5px;
   margin-right: ${({theme}) => theme.spacingTiny};
+  margin-left: auto;
 `;
 
 export const PageHeader = ({ toggleSidebar }) => {

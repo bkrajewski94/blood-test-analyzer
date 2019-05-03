@@ -57,24 +57,25 @@ const ErrorMessage = styled.div`
   color: ${({ theme }) => theme.colors.torchRed};
 `;
 
+const schema = yup.object({
+  email: yup
+    .string()
+    .trim()
+    .email(texts.authentication.emailError)
+    .required(texts.authentication.emailRequired),
+  password: yup
+    .string()
+    .trim()
+    .required(texts.authentication.passwordRequired)
+    .min(8, texts.authentication.passwordError)
+    .matches(/\d/, texts.authentication.passwordError)
+    .matches(
+      /^(?=.*[A-Z])(?=.*\d).*[\s\S]{8,}$/,
+      texts.authentication.passwordError
+    )
+});
+
 export const LoginStateless = ({onSubmit, error}) => {
-  const schema = yup.object({
-    email: yup
-      .string()
-      .trim()
-      .email(texts.authentication.emailError)
-      .required(texts.authentication.emailRequired),
-    password: yup
-      .string()
-      .trim()
-      .required(texts.authentication.passwordRequired)
-      .min(8, texts.authentication.passwordError)
-      .matches(/\d/, texts.authentication.passwordError)
-      .matches(
-        /^(?=.*[A-Z])(?=.*\d).*[\s\S]{8,}$/,
-        texts.authentication.passwordError
-      )
-  });
 
   return (
     <Page>

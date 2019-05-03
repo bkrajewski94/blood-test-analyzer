@@ -4,6 +4,7 @@ import { createGlobalStyle, ThemeProvider } from "styled-components";
 import reset from "styled-reset";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
+import { withSize } from "react-sizeme";
 
 import { theme } from "./utils/theme";
 import { PageHeader } from "./components/PageHeader/PageHeader";
@@ -13,7 +14,6 @@ import DesktopSideDrawer from "./components/DesktopSideDrawer/DekstopSideDrawer"
 import firebase from "./firebase";
 import { signIn, signOut } from "./actions";
 import { useToggleValue } from "./hooks/hooks";
-
 
 const GlobalStyle = createGlobalStyle`
   ${reset};
@@ -41,8 +41,8 @@ const PageContent = styled.div`
 const App = props => {
   const showMobileSidebar = useToggleValue(false);
   const showDesktopSidebar = useToggleValue(true);
-  const [availableSidebar] = useState(() => {
-    if (window.innerWidth <= theme.desktopWidth) {
+  const [displayMode, setDisplayMode] = useState(() => {
+    if (props.size.width <= theme.desktopWidth) {
       return "mobile";
     } else {
       return "desktop";
@@ -50,20 +50,28 @@ const App = props => {
   });
 
   useEffect(() => {
+    const screenSize =
+      props.size.width <= theme.desktopWidth ? "mobile" : "desktop";
+    if (screenSize !== displayMode) {
+      setDisplayMode(screenSize);
+    }
+  }, [props.size.width]);
+
+  useEffect(() => {
     const subscribeAuth = firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        if(user.emailVerified) {
+        if (user.emailVerified) {
           props.signIn();
         } else {
           firebase
-          .auth()
-          .signOut()
-          .then(() => {
-            props.history.push("/register/email-confirm")
-          })
-          .catch(error => {
-            // console.log(error);
-          });
+            .auth()
+            .signOut()
+            .then(() => {
+              props.history.push("/register/email-confirm");
+            })
+            .catch(error => {
+              // console.log(error);
+            });
         }
       } else {
         if (props.authStatus) {
@@ -82,12 +90,12 @@ const App = props => {
         <GlobalStyle />
         <PageHeader
           toggleSidebar={
-            availableSidebar === "desktop"
+            displayMode === "desktop"
               ? showDesktopSidebar.toggle
               : showMobileSidebar.toggle
           }
         />
-        {availableSidebar === "mobile" && (
+        {displayMode === "mobile" && (
           <MobileSideDrawer
             isOpen={showMobileSidebar.value}
             onClose={showMobileSidebar.setFalse}
@@ -95,7 +103,7 @@ const App = props => {
           />
         )}
         <PageContent>
-          {availableSidebar === "desktop" && (
+          {displayMode === "desktop" && (
             <DesktopSideDrawer
               isOpen={showDesktopSidebar.value}
               authStatus={props.authStatus}
@@ -116,5 +124,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     { signIn, signOut }
-  )(App)
+  )(withSize()(App))
 );

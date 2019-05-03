@@ -5,7 +5,7 @@ export const signIn = () => {
 }
 
 export const signOut = () => {
-    return{
+    return {
         type: 'SIGN_OUT'
     }
 }

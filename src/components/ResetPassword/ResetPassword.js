@@ -57,14 +57,15 @@ const ErrorMessage = styled.div`
   color: ${({ theme }) => theme.colors.torchRed};
 `;
 
+const schema = yup.object({
+  email: yup
+    .string()
+    .trim()
+    .email(texts.authentication.emailError)
+    .required(texts.authentication.emailRequired)
+});
+
 export const ResetPasswordStateless = ({ onSubmit, error }) => {
-  const schema = yup.object({
-    email: yup
-      .string()
-      .trim()
-      .email(texts.authentication.emailError)
-      .required(texts.authentication.emailRequired)
-  });
 
   return (
     <Page>

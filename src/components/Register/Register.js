@@ -57,29 +57,29 @@ const ErrorMessage = styled.div`
   color: ${({ theme }) => theme.colors.torchRed};
 `;
 
-export const RegisterStateless = ({ onSubmit, error }) => {
-  const schema = yup.object({
-    email: yup
-      .string()
-      .trim()
-      .email(texts.authentication.emailError)
-      .required(texts.authentication.emailRequired),
-    password: yup
-      .string()
-      .trim()
-      .required(texts.authentication.passwordRequired)
-      .min(8, texts.authentication.passwordError)
-      .matches(/\d/, texts.authentication.passwordError)
-      .matches(
-        /^(?=.*[A-Z])(?=.*\d).*[\s\S]{8,}$/,
-        texts.authentication.passwordError
-      ),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref("password"), null], "Passwords don't match")
-      .required("Confirm Password is required")
-  });
+const schema = yup.object({
+  email: yup
+    .string()
+    .trim()
+    .email(texts.authentication.emailError)
+    .required(texts.authentication.emailRequired),
+  password: yup
+    .string()
+    .trim()
+    .required(texts.authentication.passwordRequired)
+    .min(8, texts.authentication.passwordError)
+    .matches(/\d/, texts.authentication.passwordError)
+    .matches(
+      /^(?=.*[A-Z])(?=.*\d).*[\s\S]{8,}$/,
+      texts.authentication.passwordError
+    ),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords don't match")
+    .required("Confirm Password is required")
+});
 
+export const RegisterStateless = ({ onSubmit, error }) => {
   return (
     <Page>
       <Tile>

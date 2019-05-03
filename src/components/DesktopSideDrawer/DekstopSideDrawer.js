@@ -32,16 +32,16 @@ const SignOutElement = styled(MenuElement)`
   }
 `;
 
-const DesktopSideDrawer = props => {
-  const signOutHandler = () => {
-    firebase
-      .auth()
-      .signOut()
-      .catch(error => {
-        // console.log(error);
-      });
-  };
+const signOutHandler = () => {
+  firebase
+    .auth()
+    .signOut()
+    .catch(error => {
+      // console.log(error);
+    });
+};
 
+const DesktopSideDrawer = props => {
   return (
     <SideDrawerWrapper isOpen={props.isOpen}>
       <MenuItem to="/home">
