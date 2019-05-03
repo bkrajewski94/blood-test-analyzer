@@ -14,6 +14,7 @@ import DesktopSideDrawer from "./components/DesktopSideDrawer/DekstopSideDrawer"
 import firebase from "./firebase";
 import { signIn, signOut } from "./actions";
 import { useToggleValue } from "./hooks/hooks";
+import { Spinner, SpinnerWrapper } from "./components/Spinner/Spinner";
 
 const GlobalStyle = createGlobalStyle`
   ${reset};
@@ -41,24 +42,15 @@ const PageContent = styled.div`
 const App = props => {
   const showMobileSidebar = useToggleValue(false);
   const showDesktopSidebar = useToggleValue(true);
-  const [displayMode, setDisplayMode] = useState(() => {
-    if (props.size.width <= theme.desktopWidth) {
-      return "mobile";
-    } else {
-      return "desktop";
-    }
-  });
 
-  useEffect(() => {
-    const screenSize =
-      props.size.width <= theme.desktopWidth ? "mobile" : "desktop";
-    if (screenSize !== displayMode) {
-      setDisplayMode(screenSize);
-    }
-  }, [props.size.width]);
+  const [isUserDataLoaded, setUserDataLoaded] = useState(false);
 
   useEffect(() => {
     const subscribeAuth = firebase.auth().onAuthStateChanged(function(user) {
+      if(!isUserDataLoaded) {
+        setUserDataLoaded(true);
+      }
+
       if (user) {
         if (user.emailVerified) {
           props.signIn();
@@ -83,6 +75,27 @@ const App = props => {
     });
     return subscribeAuth;
   }, [props.authStatus]);
+
+  const displayMode = props.size.width <= theme.desktopWidth ? "mobile" : "desktop";
+
+
+  //As soon as i add this conditional content rendering in any kind of form (here or directly inside return()) 
+  //react-sizeme stops passing new props on window size change after refresh of the page 
+  //it works well when first loading the page, but after it's refreshed react size-me is no longer reacting to window resolution changes.
+  // Any thoughts on that?
+  
+  if(!isUserDataLoaded) { 
+    return (
+      <ThemeProvider theme={theme}>
+        <>
+          <GlobalStyle />
+          <SpinnerWrapper>
+            <Spinner />
+          </SpinnerWrapper>         
+        </>
+      </ThemeProvider>
+    )
+  }
 
   return (
     <ThemeProvider theme={theme}>
