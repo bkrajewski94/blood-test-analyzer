@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 import { texts } from "../../utils/texts";
 import { BackDrop } from "../BackDrop/BackDrop";
@@ -13,6 +13,7 @@ import { ReactComponent as Add } from "../../assets/add.svg";
 import { ReactComponent as Home } from "../../assets/home.svg";
 import { ReactComponent as List } from "../../assets/list.svg";
 import { ReactComponent as SignOut } from "../../assets/signOut.svg";
+import firebase from "../../firebase";
 
 const SideDrawer = styled.div`
   position: fixed;
@@ -23,9 +24,9 @@ const SideDrawer = styled.div`
   max-width: 250px;
   background-color: ${({ theme }) => theme.colors.white};
   transition: transform 0.3s ease-out;
-  transform: translateX(${({ show }) => (show ? "0" : "-100%")});
+  transform: translateX(${({ isOpen }) => (isOpen ? "0" : "-100%")});
   z-index: 20;
-  display: ${({ isAvailable }) => (isAvailable ? 'flex' : 'none')};
+  display: flex;
   flex-direction: column;
   justify-content: flex-start;
 `;
@@ -51,17 +52,34 @@ const Paragraph = styled.p`
   margin-bottom: 0;
 `;
 
-const MobileSideDrawer = ({ show, toggleSidebar, isAvailable, ...props }) => {
+const SignOutElement = styled(MenuElement)`
+  opacity: 0.7;
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
+const MobileSideDrawer = ({ isOpen, onClose, ...props }) => {
   useEffect(() => {
     const subscribe = props.history.listen(() => {
-      toggleSidebar();
+      onClose();
     });
     return subscribe; //unsubscribes at every preupdate
-  },[show]);
+  }, [isOpen]);
+
+  const signOutHandler = () => {
+    firebase
+      .auth()
+      .signOut()
+
+      .catch(error => {
+        // console.log(error);
+      });
+  };
 
   return ReactDOM.createPortal(
     <>
-      <SideDrawer show={show} isAvailable={isAvailable}>
+      <SideDrawer isOpen={isOpen} >
         <DrawerHeader>
           <Paragraph>Welcome!</Paragraph>
           <Paragraph handWritten withMargin>
@@ -89,20 +107,33 @@ const MobileSideDrawer = ({ show, toggleSidebar, isAvailable, ...props }) => {
         <MenuItem to="/results">
           <MenuElement icon={<List />} text={texts.sidebar.list} />
         </MenuItem>
-        <MenuItem to="/sign-out">
-          <MenuElement icon={<SignOut />} text={texts.sidebar.signOut} />
-        </MenuItem>
+        {props.authStatus ? (
+          <SignOutElement
+            icon={<SignOut />}
+            text={texts.sidebar.signOut}
+            withSpacingBottom
+            onClick={signOutHandler}
+          />
+        ) : (
+          <MenuItem to="/login">
+            <MenuElement
+              icon={<SignOut />}
+              text={texts.sidebar.signIn}
+              withSpacingBottom
+            />
+          </MenuItem>
+        )}
       </SideDrawer>
-      {isAvailable && show && <BackDrop onClick={toggleSidebar} />}
+      {isOpen && <BackDrop onClick={onClose} />}
     </>,
     document.querySelector("#mobileSideDrawer")
   );
 };
 
 MobileSideDrawer.propTypes = {
-  show: PropTypes.bool.isRequired,
-  toggleSidebar: PropTypes.func.isRequired,
-  isAvailable: PropTypes.bool.isRequired
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  authStatus: PropTypes.bool.isRequired
 };
 
 export default withRouter(MobileSideDrawer);
