@@ -109,7 +109,6 @@ export const RegisterStateless = ({ onSubmit, error }) => {
                   placeholder="Confirm password"
                   component={FormInput}
                 />
-                {error && <ErrorMessage>{error}</ErrorMessage>}
                 <SubmitButton
                   type="submit"
                   isPrimary={true}
@@ -117,6 +116,7 @@ export const RegisterStateless = ({ onSubmit, error }) => {
                 >
                   Sign Up
                 </SubmitButton>
+                {error && <ErrorMessage>{error}</ErrorMessage>}
               </Form>
             )}
           />

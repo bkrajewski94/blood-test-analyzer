@@ -9,18 +9,17 @@ const TileComponent = styled.div`
     border: ${({ theme }) => `1px solid ${theme.colors.athensGray}`}; 
     box-shadow: ${({ theme }) => theme.boxShadow}; 
     padding: ${({ theme }) => theme.spacingHuge}; 
-    margin-top: ${({ theme }) => theme.spacingContentMobile}; 
+    margin: ${({ theme }) => `${theme.spacingContentMobile} auto`}; 
+
     ${({theme}) => theme.media.atTablet}{
-        margin-top: ${({ theme }) => theme.spacingContent}; 
+        margin: ${({ theme }) => `${theme.spacingContent} auto`}; 
     }
-    margin-left: auto;
-    margin-right: auto;
     border-radius: 10px;
 `;
 
-export const Tile = ({children}) => {
+export const Tile = ({children, className}) => {
     return(
-        <TileComponent >
+        <TileComponent className={className} >
             {children}
         </TileComponent>
     )

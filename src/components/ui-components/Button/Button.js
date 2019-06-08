@@ -11,7 +11,7 @@ const ButtonComponent = styled.button`
     color: ${({isPrimary, theme}) => isPrimary ? theme.colors.white : theme.colors.trout};
     margin-left: ${({ theme }) => theme.spacingNormal}; 
     margin-right: ${({ theme }) => theme.spacingNormal}; 
-    opacity: ${({disabled}) => disabled ? '0.7' : '1'};
+    opacity: ${({disabled}) => disabled ? '0.5' : '1'};
     cursor: ${({disabled}) => disabled || 'pointer'};
 `;
 

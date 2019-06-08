@@ -100,7 +100,6 @@ export const LoginStateless = ({onSubmit, error}) => {
                   placeholder="Password"
                   component={FormInput}
                 />
-                {error && <ErrorMessage>{error}</ErrorMessage>}
                 <SubmitButton
                   type="submit"
                   isPrimary={true}
@@ -108,6 +107,7 @@ export const LoginStateless = ({onSubmit, error}) => {
                 >
                   Sign In
                 </SubmitButton>
+                {error && <ErrorMessage>{error}</ErrorMessage>}
               </Form>
             )}
           />

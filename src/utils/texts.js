@@ -17,6 +17,13 @@ export const texts = {
     confirmEmail: "We've sent you an confirmation email. Open it up to activate your account. Then you can successfully log in.",
     emailSent: "We've send you an email.",
     resetEmail: "Open it up to create new password. Then you can try to login again."
+  },
+  testBuilder: {
+    newTest: "Start your new test now!",
+    selectResults: "Please select your lab result files below.",
+    startTest: "Start your new test now!",
+    dragDrop: "Please drag & drop or select your lab result files below.",
+    select: "Select files"
   }
 
 };

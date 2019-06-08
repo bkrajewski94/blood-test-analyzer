@@ -9,3 +9,15 @@ export const signOut = () => {
         type: 'SIGN_OUT'
     }
 }
+
+export const setDisplayMobile = () => {
+    return {
+        type: 'MOBILE'
+    }
+}
+
+export const setDisplayDesktop = () => {
+    return {
+        type: 'DESKTOP'
+    }
+}

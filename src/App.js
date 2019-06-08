@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import reset from "styled-reset";
 import { connect } from "react-redux";
+import { compose } from 'redux';
 import { withRouter } from "react-router";
 import { withSize } from "react-sizeme";
 
@@ -12,7 +13,7 @@ import { RoutePageContent } from "./routes";
 import MobileSideDrawer from "./components/MobileSideDrawer/MobileSideDrawer";
 import DesktopSideDrawer from "./components/DesktopSideDrawer/DekstopSideDrawer";
 import firebase from "./firebase";
-import { signIn, signOut } from "./actions";
+import { signIn, signOut, setDisplayMobile, setDisplayDesktop } from "./actions";
 import { useToggleValue } from "./hooks/hooks";
 import { Spinner, SpinnerWrapper } from "./components/Spinner/Spinner";
 
@@ -42,15 +43,10 @@ const PageContent = styled.div`
 const App = props => {
   const showMobileSidebar = useToggleValue(false);
   const showDesktopSidebar = useToggleValue(true);
-
   const [isUserDataLoaded, setUserDataLoaded] = useState(false);
 
   useEffect(() => {
     const subscribeAuth = firebase.auth().onAuthStateChanged(function(user) {
-      if(!isUserDataLoaded) {
-        setUserDataLoaded(true);
-      }
-
       if (user) {
         if (user.emailVerified) {
           props.signIn();
@@ -72,29 +68,40 @@ const App = props => {
           props.history.push("/sign-out");
         }
       }
+
+      if (!isUserDataLoaded) {
+        setUserDataLoaded(true);
+      }
     });
     return subscribeAuth;
   }, [props.authStatus]);
 
-  const displayMode = props.size.width <= theme.desktopWidth ? "mobile" : "desktop";
 
+  const setDisplayMode = (media) => {
+    if(media.matches) {
+      props.setDisplayDesktop();
+    } else {
+      props.setDisplayMobile();
+  }
+  } 
 
-  //As soon as i add this conditional content rendering in any kind of form (here or directly inside return()) 
-  //react-sizeme stops passing new props on window size change after refresh of the page 
-  //it works well when first loading the page, but after it's refreshed react size-me is no longer reacting to window resolution changes.
-  // Any thoughts on that?
-  
-  if(!isUserDataLoaded) { 
+  useEffect(() => {
+    const media = window.matchMedia(`(min-width: ${theme.desktopWidth}px)`);
+    media.addListener(() => setDisplayMode(media));
+    return media.removeListener(() => setDisplayMode(media))
+  },[])
+
+  if (!isUserDataLoaded) {
     return (
       <ThemeProvider theme={theme}>
         <>
           <GlobalStyle />
           <SpinnerWrapper>
             <Spinner />
-          </SpinnerWrapper>         
+          </SpinnerWrapper>
         </>
       </ThemeProvider>
-    )
+    );
   }
 
   return (
@@ -103,12 +110,12 @@ const App = props => {
         <GlobalStyle />
         <PageHeader
           toggleSidebar={
-            displayMode === "desktop"
-              ? showDesktopSidebar.toggle
-              : showMobileSidebar.toggle
+            props.displayMode === "desktop"
+            ? showDesktopSidebar.toggle
+            : showMobileSidebar.toggle
           }
         />
-        {displayMode === "mobile" && (
+        {props.displayMode === "mobile" && (
           <MobileSideDrawer
             isOpen={showMobileSidebar.value}
             onClose={showMobileSidebar.setFalse}
@@ -116,13 +123,15 @@ const App = props => {
           />
         )}
         <PageContent>
-          {displayMode === "desktop" && (
+          {props.displayMode === "desktop" && (
             <DesktopSideDrawer
               isOpen={showDesktopSidebar.value}
               authStatus={props.authStatus}
             />
           )}
-          <RoutePageContent authStatus={props.authStatus} />
+          <RoutePageContent
+            authStatus={props.authStatus}
+          />
         </PageContent>
       </>
     </ThemeProvider>
@@ -130,12 +139,15 @@ const App = props => {
 };
 
 const mapStateToProps = state => {
-  return { authStatus: state.authStatus };
+  return { authStatus: state.authStatus, displayMode: state.displayMode };
 };
 
-export default withRouter(
+export default compose(
+  withRouter,
   connect(
     mapStateToProps,
-    { signIn, signOut }
-  )(withSize()(App))
-);
+    { signIn, signOut, setDisplayDesktop, setDisplayMobile }
+  ),
+  withSize(),
+)(App);
+
