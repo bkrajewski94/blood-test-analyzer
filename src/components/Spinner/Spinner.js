@@ -1,13 +1,15 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
+import {colors} from "../../utils/colors";
 
 const SpinnerComponent = styled.svg`
   animation: rotate 1s linear infinite;
-  width: 100px;
-  height: 100px;
+  width: ${({ size }) => `${size}px`};
+  height: ${({ size }) => `${size}px`};
 
   & .path {
-    stroke: #b71414;
+    stroke: ${({ color }) => color};
     stroke-linecap: round;
     animation: dash 1.5s ease-in-out infinite;
   }
@@ -41,8 +43,8 @@ export const SpinnerWrapper = styled.div`
     justify-content: center;
 `;
 
-export const Spinner = () => (
-    <SpinnerComponent viewBox="0 0 50 50">
+export const Spinner = ({size, color}) => (
+    <SpinnerComponent viewBox="0 0 50 50" size={size} color={color}>
         <circle
         className="path"
         cx="25"
@@ -54,3 +56,12 @@ export const Spinner = () => (
     </SpinnerComponent>
 );
 
+Spinner.propTypes = {
+  size: PropTypes.number,
+  color: PropTypes.string
+};
+
+Spinner.defaultProps = {
+  size: 100,
+  color: colors.thunderbird
+};

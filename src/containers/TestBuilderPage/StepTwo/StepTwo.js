@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import ImageGallery from "react-image-gallery";
 import styled from "styled-components";
+import Tesseract from "tesseract.js";
 import "react-image-gallery/styles/css/image-gallery.css";
 
 import { BuilderHeader, ContentWrapper } from "../BuilderHeader/BuilderHeader";
@@ -34,25 +35,82 @@ const TrashBinIcon = styled(TrashBin)`
   }
 `;
 
-export const StepTwo = ({ files, toNextStepHandler, toPrevStepHandler, deleteImageHandler }) => {
+export const StepTwo = ({
+  files,
+  toNextStepHandler,
+  toPrevStepHandler,
+  deleteImageHandler,
+  readResultsHandler,
+  recognitionStatus,
+  setRecognitionStatus,
+  recognitionStatusLibrary
+}) => {
   const gallery = useRef();
+  const rejectTesseract = useRef(false);
+
+  useEffect(() => {
+    return () => {rejectTesseract.current = true};
+  },[])
+
   const images = files.map(file => {
     return {
       original: file,
       thumbnail: file
     };
   });
+
+  const tesseractRecognize = file => new Promise((resolve, reject) => {
+    const { TesseractWorker } = Tesseract;
+    const worker = new TesseractWorker();
+   
+    worker.recognize(file, 'pol+eng')
+      .progress(message => {
+        console.log(message.progress);
+        if(rejectTesseract.current) {
+          worker.terminate();
+        }
+      })
+      .then(result => {
+        resolve(result.lines)
+      })
+      .catch(reject)
+  });
+
+  const doOCR = () => {
+    setRecognitionStatus(recognitionStatusLibrary[1]);
+    Promise.all(files.map(file => tesseractRecognize(file)))
+      .then(results => {
+        readResultsHandler(results.flat().map(result => result.text), 'diagnostyka');
+      })
+  }
+  
   return (
     <Wrapper>
       <BuilderHeader>
         <Button onClick={toPrevStepHandler}>Prev step</Button>
-        <Button onClick={toNextStepHandler} isPrimary>
-          Start now!
-        </Button>
+        {recognitionStatus === recognitionStatusLibrary[0] && (
+          <Button onClick={doOCR} isPrimary>
+            Start now!
+          </Button>
+        )}
+        {recognitionStatus === recognitionStatusLibrary[1] && (
+          <Button disabled isPrimary>
+            Processing
+          </Button>
+        )}
+        {recognitionStatus === recognitionStatusLibrary[2] && (
+          <Button onClick={toNextStepHandler} isPrimary>
+            See results
+          </Button>
+        )}
       </BuilderHeader>
       <ContentWrapper>
         <GalleryTile>
-          <TrashBinIcon onClick={() => deleteImageHandler(gallery.current.getCurrentIndex())}/>
+          <TrashBinIcon
+            onClick={() =>
+              deleteImageHandler(gallery.current.getCurrentIndex())
+            }
+          />
           <ImageGallery
             items={images}
             showBullets={true}
@@ -62,7 +120,6 @@ export const StepTwo = ({ files, toNextStepHandler, toPrevStepHandler, deleteIma
             showPlayButton={false}
             useBrowserFullscreen={true}
             ref={i => (gallery.current = i)}
-            // onSlide={() => deleteImageHandler(gallery.current.getCurrentIndex())}
           />
         </GalleryTile>
       </ContentWrapper>
