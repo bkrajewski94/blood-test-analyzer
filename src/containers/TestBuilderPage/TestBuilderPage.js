@@ -4,6 +4,7 @@ import { StepOne } from "./StepOne/StepOne";
 import { StepTwo } from "./StepTwo/StepTwo";
 import { Page } from "../../components/Page/Page";
 import { readDiagnostyka } from "./readDiagnostyka/readDiagnostyka";
+import { ReactComponent as Test} from "../../assets/test.svg";
 
 const recognitionStatusLibrary = ['ready', 'processing', 'finished']
 
@@ -45,13 +46,14 @@ export const TestBuilderPage = React.memo(props => {
   return (
     <Page>
       {step === 1 && (
-        <StepOne
-          setAcceptedFiles={setAcceptedFiles}
-          setRejectedFiles={setRejectedFiles}
-          rejectedFiles={rejectedFiles}
-          disabled={acceptedFiles.length === 0}
-          toNextStepHandler={toNextStepHandler}
-        />
+        // <StepOne
+        //   setAcceptedFiles={setAcceptedFiles}
+        //   setRejectedFiles={setRejectedFiles}
+        //   rejectedFiles={rejectedFiles}
+        //   disabled={acceptedFiles.length === 0}
+        //   toNextStepHandler={toNextStepHandler}
+        // />
+        <Test />
       )}
       {step === 2 && (
         <StepTwo
