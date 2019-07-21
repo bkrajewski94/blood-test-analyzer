@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 import { Page } from "../Page/Page";
 import { Button } from "../ui-components/Button/Button";
-import { Tile } from "../ui-components/Tile/Tile";
+import { AuthTile } from "../AuthTile/AuthTile";
 import { FormInput } from "../FormComponents/FormInput";
 import { texts } from "../../utils/texts";
 import { ReactComponent as SignIn } from "../../assets/login.svg";
@@ -79,7 +79,7 @@ export const LoginStateless = ({onSubmit, error}) => {
 
   return (
     <Page>
-      <Tile>
+      <AuthTile>
         <Wrapper>
           <Image />
           <Formik
@@ -118,7 +118,7 @@ export const LoginStateless = ({onSubmit, error}) => {
             Don't have an account? <RedirectLink to="/register">Sign Up!</RedirectLink>
           </Redirect>
         </Wrapper>
-      </Tile>
+      </AuthTile>
     </Page>
   );
 };

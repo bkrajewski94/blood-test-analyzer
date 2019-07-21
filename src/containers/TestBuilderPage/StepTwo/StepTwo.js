@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ImageGallery from "react-image-gallery";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Tesseract from "tesseract.js";
 import "react-image-gallery/styles/css/image-gallery.css";
 
@@ -8,6 +8,7 @@ import { BuilderHeader, ContentWrapper } from "../BuilderHeader/BuilderHeader";
 import { Button } from "../../../components/ui-components/Button/Button";
 import { Tile } from "../../../components/ui-components/Tile/Tile";
 import { ReactComponent as TrashBin } from "../../../assets/trash.svg";
+import styles from "./StepTwo.module.css"
 
 const Wrapper = styled.div`
   position: relative;
@@ -18,6 +19,13 @@ const GalleryTile = styled(Tile)`
   margin: 0 auto;
   padding: ${({ theme }) => theme.spacingNormal};
   position: relative;
+
+  width: 90%;
+    max-width: 700px;
+    margin: ${({ theme }) => `${theme.spacingContentMobile} auto`}; 
+    ${({theme}) => theme.media.atTablet}{
+        margin: ${({ theme }) => `${theme.spacingContent} auto`}; 
+    }
 `;
 
 const TrashBinIcon = styled(TrashBin)`
@@ -47,6 +55,7 @@ export const StepTwo = ({
 }) => {
   const gallery = useRef();
   const rejectTesseract = useRef(false);
+  const [isFullScreen, setFullScreen] = useState(false);
 
   useEffect(() => {
     return () => {rejectTesseract.current = true};
@@ -120,6 +129,8 @@ export const StepTwo = ({
             showPlayButton={false}
             useBrowserFullscreen={true}
             ref={i => (gallery.current = i)}
+            onScreenChange = {fullScreenElement => !!fullScreenElement ? setFullScreen(true) : setFullScreen(false)}
+            additionalClass={isFullScreen ? styles.imageGalleryFullscreen : null}
           />
         </GalleryTile>
       </ContentWrapper>

@@ -1,37 +1,53 @@
-const { PieChart, Pie, Sector, Cell } = Recharts;
-const data = [
-{name: 'Group A', value: 400}, 
-{name: 'Group B', value: 400},
-{name: 'Group C', value: 400}, 
-{name: 'Group D', value: 400},
-{name: 'Group D', value: 400}];
+import React from 'react';
+import { PieChart, Pie, Cell } from 'recharts';
+import styled from "styled-components";
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#c42700'];
+import { ReactComponent as PointerComponent } from "../../../assets/pointer.svg";
 
-const RADIAN = Math.PI / 180;                    
+const PieChartWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+`;
 
-const SimplePieChart = React.createClass({
-	render () {
-  	return (
-    	<PieChart width={210} height={210} onMouseEnter={this.onPieEnter}>
+const PointerWrapper = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transform: ${({ angle }) => `rotate(${angle}deg)`};
+`;
+
+const Pointer = styled(PointerComponent)`
+  position: absolute;
+  left: 50%;
+  top: 23px;
+  transform: translateX(-50%);
+`;
+
+export const PieChartComponent = ({data, angle}) => {
+  return (
+    <PieChartWrapper>
+      <PieChart width={200} height={200}>
         <Pie
           data={data} 
-          cx={100} 
-          cy={100} 
+          cx={95} 
+          cy={95} 
           outerRadius={100} 
           fill="#8884d8"
+          isAnimationActive={false}
+          startAngle={90}
+          endAngle={450}
+          dataKey="value"
         >
-        	{
-          	data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
+          {
+            data.map((entry) => <Cell key={entry.name} fill={entry.color}/>) //entry needed for colors to work properly
           }
         </Pie>
       </PieChart>
-      
-    );
-  }
-})
-
-ReactDOM.render(
-  <SimplePieChart />,
-  document.getElementById('container')
-);
+      <PointerWrapper angle={angle}>
+        <Pointer />
+      </PointerWrapper>
+    </PieChartWrapper>
+  );
+}

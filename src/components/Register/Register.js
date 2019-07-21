@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 import { Page } from "../Page/Page";
 import { Button } from "../ui-components/Button/Button";
-import { Tile } from "../ui-components/Tile/Tile";
+import { AuthTile } from "../AuthTile/AuthTile";
 import { FormInput } from "../FormComponents/FormInput";
 import { texts } from "../../utils/texts";
 import { ReactComponent as Register } from "../../assets/register.svg";
@@ -82,7 +82,7 @@ const schema = yup.object({
 export const RegisterStateless = ({ onSubmit, error }) => {
   return (
     <Page>
-      <Tile>
+      <AuthTile>
         <Wrapper>
           <Image />
           <Formik
@@ -125,7 +125,7 @@ export const RegisterStateless = ({ onSubmit, error }) => {
             <RedirectLink to="/login">Sign In</RedirectLink>
           </Redirect>
         </Wrapper>
-      </Tile>
+      </AuthTile>
     </Page>
   );
 };

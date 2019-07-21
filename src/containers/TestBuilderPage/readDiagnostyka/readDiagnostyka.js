@@ -1,6 +1,7 @@
 import FuzzySet from "fuzzyset.js";
 
 import * as neuralFunctions from "./diagnostykaNeuralNetwork";
+import { texts } from "../../../utils/texts";
 
 const namesMorphology = [
   "Leukocyty",
@@ -101,7 +102,7 @@ const getValue = line => {
 };
 
 const interpretResults = data => {
-  const interpretedData = {};
+  const interpretedData = [];
 
   if(data.Erytrocyty && data.Hematokryt && data.MCV) {
     if(data.Erytrocyty.value && data.Hematokryt.value && data.MCV.value) {
@@ -110,7 +111,7 @@ const interpretResults = data => {
         hematokryt: data.Hematokryt.value / neuralDevidersLibrary.rbc,
         mcv: data.MCV.value / neuralDevidersLibrary.rbc
       }
-      interpretedData.rbc = neuralFunctions.rbc(rbcData);
+      interpretedData.push({...neuralFunctions.rbc(rbcData), title: texts.test.rbc});
     }
   }
 
@@ -121,7 +122,7 @@ const interpretResults = data => {
         limfocyty: data.Limfocyty.value / neuralDevidersLibrary.wbc,
         neutrofile: data.Neutrofile.value / neuralDevidersLibrary.wbc
       }
-      interpretedData.wbc = neuralFunctions.wbc(wbcData);
+      interpretedData.push({...neuralFunctions.wbc(wbcData), title: texts.test.wbc});
     }
   } 
 
@@ -131,7 +132,7 @@ const interpretResults = data => {
         ast: data.AST.value / neuralDevidersLibrary.liver,
         alt: data.ALT.value / neuralDevidersLibrary.liver
       }
-      interpretedData.liver = neuralFunctions.liver(liverData);
+      interpretedData.push({...neuralFunctions.liver(liverData), title: texts.test.liver});
     }
   } 
 
@@ -142,7 +143,7 @@ const interpretResults = data => {
         ft3: data.FT3.value / neuralDevidersLibrary.thyriod,
         ft4: data.FT4.value / neuralDevidersLibrary.thyriod
       }
-      interpretedData.thyriod = neuralFunctions.thyriod(thyriodData);
+      interpretedData.push({...neuralFunctions.thyriod(thyriodData), title: texts.test.thyriod});
     }
   } 
 
@@ -152,7 +153,7 @@ const interpretResults = data => {
         glukoza: data.Glukoza.value / neuralDevidersLibrary.glucoze,
         insulina: data.Insulina.value / neuralDevidersLibrary.glucoze
       }
-      interpretedData.glucoze = neuralFunctions.glucoze(glucozeData);
+      interpretedData.push({...neuralFunctions.glucoze(glucozeData), title: texts.test.glucoze});
     }
   } 
 
@@ -162,7 +163,7 @@ const interpretResults = data => {
         aTpo: data.anty_TPO.value / neuralDevidersLibrary.hashimoto,
         aTg: data.anty_TG.value / neuralDevidersLibrary.hashimoto
       }
-      interpretedData.hashimoto = neuralFunctions.hashimoto(hashimotoData);
+      interpretedData.push({...neuralFunctions.hashimoto(hashimotoData), title: texts.test.hashimoto});
     }
   } 
 
@@ -172,11 +173,12 @@ const interpretResults = data => {
         eozynofile: data.Eozynofile.value / neuralDevidersLibrary.allergy,
         bazofile: data.Bazofile.value / neuralDevidersLibrary.allergy
       }
-      interpretedData.allergy = neuralFunctions.allergy(allergyData);
+      interpretedData.push({...neuralFunctions.allergy(allergyData), title: texts.test.allergies});
     }
   } 
   
-  console.log(interpretedData);
+  return interpretedData;
+
 };
 
 export const readDiagnostyka = data => {
@@ -200,5 +202,6 @@ export const readDiagnostyka = data => {
     return val;
   }, {});
 
-  interpretResults(bloodData);
+  const interpretedResults = interpretResults(bloodData);
+  return interpretedResults;
 };

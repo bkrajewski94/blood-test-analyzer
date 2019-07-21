@@ -11,3 +11,13 @@ export const colors = {
   japaneseLaurelDark: "#247c03",  //darker green
   portGore: "#25265E" // dark blue
 };
+
+
+export const pieChartColors = {
+  green: "#00C49F",
+  blue: "#0088FE",
+  yellow: "#FFBB28",
+  orange: "#FF8042",
+  red: "#c42700"
+}
+

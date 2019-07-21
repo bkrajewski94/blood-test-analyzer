@@ -2,9 +2,9 @@ import React, { useState } from "react";
 
 import { StepOne } from "./StepOne/StepOne";
 import { StepTwo } from "./StepTwo/StepTwo";
+import { StepThree } from "./StepThree/StepThree";
 import { Page } from "../../components/Page/Page";
 import { readDiagnostyka } from "./readDiagnostyka/readDiagnostyka";
-import { ReactComponent as Test} from "../../assets/test.svg";
 
 const recognitionStatusLibrary = ['ready', 'processing', 'finished']
 
@@ -37,7 +37,8 @@ export const TestBuilderPage = React.memo(props => {
     let data = {};
     switch (pattern) {
       case 'diagnostyka':
-        data = {...readDiagnostyka(results)};
+        data = [...readDiagnostyka(results)];
+        console.log(data);
     }
     setResults(data);
     setRecognitionStatus(recognitionStatusLibrary[2]);
@@ -46,14 +47,13 @@ export const TestBuilderPage = React.memo(props => {
   return (
     <Page>
       {step === 1 && (
-        // <StepOne
-        //   setAcceptedFiles={setAcceptedFiles}
-        //   setRejectedFiles={setRejectedFiles}
-        //   rejectedFiles={rejectedFiles}
-        //   disabled={acceptedFiles.length === 0}
-        //   toNextStepHandler={toNextStepHandler}
-        // />
-        <Test />
+        <StepOne
+          setAcceptedFiles={setAcceptedFiles}
+          setRejectedFiles={setRejectedFiles}
+          rejectedFiles={rejectedFiles}
+          disabled={acceptedFiles.length === 0}
+          toNextStepHandler={toNextStepHandler}
+        />
       )}
       {step === 2 && (
         <StepTwo
@@ -67,7 +67,7 @@ export const TestBuilderPage = React.memo(props => {
           recognitionStatusLibrary={recognitionStatusLibrary}
         />
       )}
-      {step === 3 && <div>STEP 3 PLACEHOLDER</div>}
+      {step === 3 && <StepThree data={results} />}
     </Page>
   );
 });

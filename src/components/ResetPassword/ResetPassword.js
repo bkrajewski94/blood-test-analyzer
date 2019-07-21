@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 import { Page } from "../Page/Page";
 import { Button } from "../ui-components/Button/Button";
-import { Tile } from "../ui-components/Tile/Tile";
+import { AuthTile } from "../AuthTile/AuthTile";
 import { FormInput } from "../FormComponents/FormInput";
 import { texts } from "../../utils/texts";
 import { ReactComponent as ResetPasswordImage } from "../../assets/passwordReset.svg";
@@ -69,7 +69,7 @@ export const ResetPasswordStateless = ({ onSubmit, error }) => {
 
   return (
     <Page>
-      <Tile>
+      <AuthTile>
         <Wrapper>
           <Image />
           <Formik
@@ -98,7 +98,7 @@ export const ResetPasswordStateless = ({ onSubmit, error }) => {
             Go back to <RedirectLink to="/login">Sign In</RedirectLink>
           </Redirect>
         </Wrapper>
-      </Tile>
+      </AuthTile>
     </Page>
   );
 };

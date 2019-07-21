@@ -1,3 +1,6 @@
+import { pieChartColors } from "../../../utils/colors";
+import { texts } from "../../../utils/texts";
+
 export function liver({ ast, alt }) {
   const F = {
     0: 0.5,
@@ -63,16 +66,19 @@ export function liver({ ast, alt }) {
     value: F[29],
     ranges: [
       {
-        description: "ok",
+        description: texts.test.healthy,
         expectedValue: 0,
+        color: pieChartColors.green
       },
       {
-        description: "Chronic stage",
+        description: texts.test.liverModerate,
         expectedValue: 0.5,
+        color: pieChartColors.yellow
       },
       {
-        description: "Acute stage",
+        description: texts.test.liverAcute,
         expectedValue: 1,
+        color: pieChartColors.red
       }
     ]
   };
@@ -170,16 +176,19 @@ export function thyriod({ tsh, ft3, ft4 }) {
     value: F[42],
     ranges: [
       {
-        description: "hypothyroidism",
+        description: texts.test.hypothyroidism,
         expectedValue: 0,
+        color: pieChartColors.yellow
       },
       {
-        description: "ok",
+        description: texts.test.healthy,
         expectedValue: 0.5,
+        color: pieChartColors.green
       },
       {
-        description: "hyperthyroidism",
+        description: texts.test.hyperthyroidism,
         expectedValue: 1,
+        color: pieChartColors.orange
       }
     ]
   };
@@ -277,20 +286,24 @@ export function wbc({ leukocyty, limfocyty, neutrofile }) {
     value: F[42],
     ranges: [
       {
-        description: "HIV",
+        description: texts.test.wbcSevere,
         expectedValue: 0,
+        color: pieChartColors.red
       },
       {
-        description: "Chronic stage",
+        description: texts.test.wbcModerate,
         expectedValue: 0.33,
+        color: pieChartColors.yellow
       },
       {
-        description: "ok",
+        description: texts.test.healthy,
         expectedValue: 0.66,
+        color: pieChartColors.green
       },
       {
-        description: "Acute stage",
+        description: texts.test.wbcAcute,
         expectedValue: 1,
+        color: pieChartColors.blue
       }
     ]
   };
@@ -364,12 +377,14 @@ export function hashimoto({ aTpo, aTg }) {
     value: F[29],
     ranges: [
       {
-        description: "No",
+        description: texts.test.healthy,
         expectedValue: 0,
+        color: pieChartColors.green
       },
       {
-        description: "Yes",
+        description: texts.test.hashimotoActive,
         expectedValue: 1,
+        color: pieChartColors.red
       }
     ]
   };
@@ -467,24 +482,29 @@ export function rbc({ erytrocyty, hematokryt, mcv }) {
     value: F[42],
     ranges: [
       {
-        description: "B9, B12",
+        description: texts.test.anemiaB,
         expectedValue: 0,
+        color: pieChartColors.yellow
       },
       {
-        description: "B9, B12, Fe",
+        description: texts.test.anemiaAll,
         expectedValue: 0.25,
+        color: pieChartColors.red
       },
       {
-        description: "Fe",
+        description: texts.test.anemiaFe,
         expectedValue: 0.5,
+        color: pieChartColors.orange
       },
       {
-        description: "ok",
+        description: texts.test.healthy,
         expectedValue: 0.75,
+        color: pieChartColors.green
       },
       {
-        description: "to much blood",
+        description: texts.test.rbcHigh,
         expectedValue: 1,
+        color: pieChartColors.blue
       }
     ]
   };
@@ -557,20 +577,24 @@ export function glucoze({ glukoza, insulina }) {
     value: F[29],
     ranges: [
       {
-        description: "type 1",
+        description: texts.test.diabetesType1,
         expectedValue: 0,
+        color: pieChartColors.red
       },
       {
-        description: "ok",
+        description: texts.test.healthy,
         expectedValue: 0.33,
+        color: pieChartColors.green
       },
       {
-        description: "insuline resistance",
+        description: texts.test.insulinResistance,
         expectedValue: 0.66,
+        color: pieChartColors.yellow
       },
       {
-        description: "type 2",
+        description: texts.test.diabetesType2,
         expectedValue: 1,
+        color: pieChartColors.orange
       }
     ]
   };
@@ -644,12 +668,14 @@ export function allergy({ eozynofile, bazofile }) {
     value: F[29],
     ranges: [
       {
-        description: "No",
+        description: texts.test.healthy,
         expectedValue: 0,
+        color: pieChartColors.green
       },
       {
-        description: "Yes",
+        description: texts.test.allergyActive,
         expectedValue: 1,
+        color: pieChartColors.orange
       }
     ]
   };
