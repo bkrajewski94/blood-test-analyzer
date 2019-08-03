@@ -47,16 +47,18 @@ const neuralDevidersLibrary = {
   wbc: 12,
   liver: 400,
   thyriod: 10,
-  glucoze: 400,
+  glucose: 400,
   hashimoto: 200,
   allergy: 10
 };
+
+const similarityThreshold = 0.6;
 
 const getName = line => {
   const element = line.split(" ")[0];
   const result =
     fuzy.get(element) &&
-    fuzy.get(element)[0][0] > 0.6 &&
+    fuzy.get(element)[0][0] > similarityThreshold &&
     fuzy.get(element)[0][1];
   if (line.includes("%") && withPercentMorphology.includes(`${result} %`)) {
     return `${result} %`;
@@ -149,11 +151,11 @@ const interpretResults = data => {
 
   if(data.Glukoza && data.Insulina){
     if(data.Glukoza.value && data.Insulina.value){
-      const glucozeData = {
-        glukoza: data.Glukoza.value / neuralDevidersLibrary.glucoze,
-        insulina: data.Insulina.value / neuralDevidersLibrary.glucoze
+      const glucoseData = {
+        glukoza: data.Glukoza.value / neuralDevidersLibrary.glucose,
+        insulina: data.Insulina.value / neuralDevidersLibrary.glucose
       }
-      interpretedData.push({...neuralFunctions.glucoze(glucozeData), title: texts.test.glucoze});
+      interpretedData.push({...neuralFunctions.glucose(glucoseData), title: texts.test.glucose});
     }
   } 
 

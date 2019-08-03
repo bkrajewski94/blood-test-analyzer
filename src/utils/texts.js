@@ -44,7 +44,7 @@ export const texts = {
     wbcAcute: "Acute/ongoing infection",
     hashimoto: "Hashimoto",
     hashimotoActive: "Active hashimoto disease",
-    glucoze: "Blood sugar",
+    glucose: "Blood sugar",
     diabetesType1: "Type 1 diabetes",
     diabetesType2: "Type 2 diabetes",
     insulinResistance: "Insulin resistance",

@@ -76,29 +76,30 @@ const Legend = styled.div`
   }
 `;
 
-export const StepThree = ({ data }) => {
-  const getPieChartData = ranges =>
-    ranges.map(element => ({
-      name: element.description,
-      value: 1, //every piece of pieChart must take the same amout of space - it can be changed to any value (proportion counts)
-      color: element.color
-    }));
+const getPieChartData = ranges =>
+ranges.map(element => ({
+  name: element.description,
+  value: 1, //every piece of pieChart must take the same amout of space - it can be changed to any value (proportion counts)
+  color: element.color
+}));
 
-  const findClosestRange = (value, ranges) => {
-    let index = 0;
-    let error = 1;
-    ranges.forEach((range, i) => {
-      if(Math.abs(range.expectedValue - value) < error) {
-        index = i;
-        error = Math.abs(range.expectedValue - value)
-      }
-    })
-    return index;
-  };
-
-  const getPointerAngle = (index, size) => {
-    return (((360/size) * index) + ((360/size) * 0.5))*(-1);
+const findClosestRange = (value, ranges) => {
+let index = 0;
+let error = 1;
+ranges.forEach((range, i) => {
+  if(Math.abs(range.expectedValue - value) < error) {
+    index = i;
+    error = Math.abs(range.expectedValue - value)
   }
+})
+return index;
+};
+
+const getPointerAngle = (index, size) => {
+return (((360/size) * index) + ((360/size) * 0.5))*(-1);
+}
+
+export const StepThree = ({ data }) => {
 
   const activeIndexes = data.map(element => findClosestRange(element.value, element.ranges));
 

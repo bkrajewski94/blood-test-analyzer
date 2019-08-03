@@ -6,13 +6,18 @@ import { StepThree } from "./StepThree/StepThree";
 import { Page } from "../../components/Page/Page";
 import { readDiagnostyka } from "./readDiagnostyka/readDiagnostyka";
 
-const recognitionStatusLibrary = ['ready', 'processing', 'finished']
+const recognitionStatusLibrary = ['ready', 'processing', 'finished'];
+const RECOGNITION_STATUS_DICTIONARY = {
+  READY: 'ready',
+  PROCESSING: 'processing',
+  FINISHED: 'finished',
+};
 
 export const TestBuilderPage = React.memo(props => {
   const [acceptedFiles, setAcceptedFiles] = useState([]);
   const [rejectedFiles, setRejectedFiles] = useState([]);
   const [step, setStep] = useState(1);
-  const [recognitionStatus, setRecognitionStatus] = useState(recognitionStatusLibrary[0]);
+  const [recognitionStatus, setRecognitionStatus] = useState(RECOGNITION_STATUS_DICTIONARY.READY);
   const [results, setResults] = useState({});
 
   const toNextStepHandler = () => {
@@ -20,7 +25,7 @@ export const TestBuilderPage = React.memo(props => {
   };
 
   const toPrevStepHandler = () => {
-    step === 2 && setRecognitionStatus(recognitionStatusLibrary[0]);
+    step === 2 && setRecognitionStatus(RECOGNITION_STATUS_DICTIONARY.READY);
     setStep(prevStep => prevStep - 1);
   };
 
@@ -38,10 +43,9 @@ export const TestBuilderPage = React.memo(props => {
     switch (pattern) {
       case 'diagnostyka':
         data = [...readDiagnostyka(results)];
-        console.log(data);
     }
     setResults(data);
-    setRecognitionStatus(recognitionStatusLibrary[2]);
+    setRecognitionStatus(RECOGNITION_STATUS_DICTIONARY.FINISHED);
   };
 
   return (
@@ -64,7 +68,7 @@ export const TestBuilderPage = React.memo(props => {
           readResultsHandler={readResultsHandler}
           recognitionStatus={recognitionStatus}
           setRecognitionStatus={setRecognitionStatus}
-          recognitionStatusLibrary={recognitionStatusLibrary}
+          RECOGNITION_STATUS_DICTIONARY={RECOGNITION_STATUS_DICTIONARY}
         />
       )}
       {step === 3 && <StepThree data={results} />}

@@ -512,7 +512,7 @@ export function rbc({ erytrocyty, hematokryt, mcv }) {
   return output;
 }
 
-export function glucoze({ glukoza, insulina }) {
+export function glucose({ glukoza, insulina }) {
   const F = {
     0: 0.585,
     1: 0.09,
