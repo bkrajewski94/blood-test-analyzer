@@ -14,7 +14,7 @@ export const theme = {
   spacingContentMobile: "1.5rem",
   spacingLarge: "2rem",
   spacingHuge: "3rem",
-  spacingContent: "5rem",
+  spacingContent: "3rem",
   spacing: (size) => `${size}rem`,
 
   fontDefault: "Assistant",

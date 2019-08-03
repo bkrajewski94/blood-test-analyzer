@@ -1,4 +1,13 @@
 import { combineReducers } from "redux";
+import { theme } from "../utils/theme";
+
+const getDisplay = () => {
+  if (window.innerWidth <= theme.desktopWidth) { 
+    return "mobile";
+  } else {
+    return "desktop";
+  }
+}
 
 const authStatus = (isAuthenticated = false, action) => {
   switch (action.type) {
@@ -10,7 +19,21 @@ const authStatus = (isAuthenticated = false, action) => {
     }
     default:  //to turn off console warning
   }
-  return isAuthenticated
+  return isAuthenticated;
 };
 
-export default combineReducers({authStatus: authStatus});
+const displayMode = (currentDisplayMode = getDisplay(), action) => {
+  switch (action.type) {
+    case "MOBILE": {
+      return "mobile";
+    }
+    case "DESKTOP": {
+      return "desktop";
+    }
+    default:  //to turn off console warning
+  }
+  return currentDisplayMode;
+}
+
+
+export default combineReducers({authStatus: authStatus, displayMode: displayMode});
