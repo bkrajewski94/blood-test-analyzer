@@ -15,7 +15,7 @@ export const RoutePageContent = ({ authStatus }) => {
       <Switch>
         <Route path="/home" render={() => <HomePage />} />
         <Route path="/user" render={() => <h1>USER</h1>} />
-        <Route path="/new-test" render={() => <TestBuilderPage />} />
+        <Route path="/:uid/new-test" render={props => <TestBuilderPage {...props}/>} />
         <Route path="/results" render={() => <h1>PREVIOUS RESULTS</h1>} />
         <Redirect from="/" to="/home" />
       </Switch>

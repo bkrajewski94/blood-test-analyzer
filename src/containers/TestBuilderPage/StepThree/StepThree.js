@@ -4,25 +4,38 @@ import styled from "styled-components";
 import { Tile } from "../../../components/ui-components/Tile/Tile";
 import { PieChartComponent as PieChart } from "./PieChart";
 import { LegendElement } from "./LegendElement";
+import { BuilderHeader, ContentWrapper } from "../BuilderHeader/BuilderHeader";
+import { Button } from "../../../components/ui-components/Button/Button";
+import { texts } from "../../../utils/texts";
+import { StoreDataModal } from "./StoreDataModal";
+import { useToggleValue } from "../../../hooks/hooks";
 
 const Wrapper = styled.div`
+  position: relative;
+  height: 100%;
+`;
+
+const ResultsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 90%;
   max-width: 725px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
   padding-bottom: ${({ theme }) => theme.spacingContentMobile};
   ${({ theme }) => theme.media.atTablet} {
-    padding-bottom: ${({ theme }) => theme.spacingContent};
+      padding-bottom: ${({ theme }) => theme.spacingContent};
   }
 `;
 
 const PieChartTile = styled(Tile)`
-  margin-top: ${({ theme }) => theme.spacingContentMobile};
+  & + & {
+    margin-top: ${({ theme }) => theme.spacingContentMobile};
+  }
   ${({ theme }) => theme.media.atTablet} {
-    margin-top: ${({ theme }) => theme.spacingContent};
+      & + & {
+        margin-top: ${({ theme }) => theme.spacingContent};
+    } 
   }
   width: 100%;
 `;
@@ -99,32 +112,44 @@ const getPointerAngle = (index, size) => {
 return (((360/size) * index) + ((360/size) * 0.5))*(-1);
 }
 
-export const StepThree = ({ data }) => {
+export const StepThree = ({data, toPrevStepHandler, storeOnServerHandler}) => {
+  const showModal = useToggleValue(false);
 
   const activeIndexes = data.map(element => findClosestRange(element.value, element.ranges));
 
   return (
+    <>
+    {showModal.value && <StoreDataModal closeModalHandler={showModal.setFalse} storeOnServerHandler={storeOnServerHandler}/>}
     <Wrapper>
-      {data.map((element, index) => (
-        <PieChartTile key={element.title.split(' ').join('')}>
-          <PieChartTitle>{element.title}</PieChartTitle>
-          <PieChartSection>
-            <PieChartWrapper>
-              <PieChart data={getPieChartData(element.ranges)} angle={getPointerAngle(activeIndexes[index], element.ranges.length)}/>
-            </PieChartWrapper>
-            <Legend>
-              {element.ranges.map((range, i) => (
-                <LegendElement
-                  key={range.color}
-                  color={range.color}
-                  title={range.description}
-                  isActive={false}
-                />
-              ))}
-            </Legend>
-          </PieChartSection>
-        </PieChartTile>
-      ))}
+      <BuilderHeader>
+        <Button onClick={toPrevStepHandler}>{texts.testBuilder.prevStep}</Button>
+        <Button onClick={showModal.setTrue} isPrimary>{texts.testBuilder.store}</Button>
+      </BuilderHeader>
+      <ContentWrapper>
+        <ResultsWrapper>
+          {data.map((element, index) => (
+            <PieChartTile key={element.title.split(' ').join('')}>
+              <PieChartTitle>{element.title}</PieChartTitle>
+              <PieChartSection>
+                <PieChartWrapper>
+                  <PieChart data={getPieChartData(element.ranges)} angle={getPointerAngle(activeIndexes[index], element.ranges.length)}/>
+                </PieChartWrapper>
+                <Legend>
+                  {element.ranges.map((range, i) => (
+                    <LegendElement
+                      key={range.color}
+                      color={range.color}
+                      title={range.description}
+                      isActive={false}
+                    />
+                  ))}
+                </Legend>
+              </PieChartSection>
+            </PieChartTile>
+          ))}
+        </ResultsWrapper>
+      </ContentWrapper>
     </Wrapper>
+    </>
   );
 };

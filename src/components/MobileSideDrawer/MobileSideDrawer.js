@@ -25,7 +25,7 @@ const SideDrawer = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   transition: transform 0.3s ease-out;
   transform: translateX(${({ isOpen }) => (isOpen ? "0" : "-100%")});
-  z-index: 20;
+  z-index: ${({ theme }) => theme.zIndexModal};
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

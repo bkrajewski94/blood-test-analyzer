@@ -105,7 +105,7 @@ const getColor = (props) => {
     <Wrapper>
         <BuilderHeader nextOnly>
             <Button disabled={props.disabled} onClick={props.toNextStepHandler} isPrimary>
-                Next step
+                {texts.testBuilder.nextStep}
             </Button>
         </BuilderHeader>
         <ContentWrapper>

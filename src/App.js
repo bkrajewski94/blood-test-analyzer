@@ -5,7 +5,6 @@ import reset from "styled-reset";
 import { connect } from "react-redux";
 import { compose } from 'redux';
 import { withRouter } from "react-router";
-import { withSize } from "react-sizeme";
 
 import { theme } from "./utils/theme";
 import { PageHeader } from "./components/PageHeader/PageHeader";
@@ -13,7 +12,7 @@ import { RoutePageContent } from "./routes";
 import MobileSideDrawer from "./components/MobileSideDrawer/MobileSideDrawer";
 import DesktopSideDrawer from "./components/DesktopSideDrawer/DekstopSideDrawer";
 import firebase from "./firebase";
-import { signIn, signOut, setDisplayMobile, setDisplayDesktop } from "./actions";
+import { signIn, signOut, setDisplayMobile, setDisplayDesktop, setUserInfo } from "./actions";
 import { useToggleValue } from "./hooks/hooks";
 import { Spinner, SpinnerWrapper } from "./components/Spinner/Spinner";
 
@@ -49,6 +48,7 @@ const App = props => {
     const subscribeAuth = firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         if (user.emailVerified) {
+          props.setUserInfo({uid: user.uid, email: user.email});
           props.signIn();
         } else {
           firebase
@@ -82,7 +82,7 @@ const App = props => {
       props.setDisplayDesktop();
     } else {
       props.setDisplayMobile();
-  }
+    }
   } 
 
   useEffect(() => {
@@ -146,8 +146,7 @@ export default compose(
   withRouter,
   connect(
     mapStateToProps,
-    { signIn, signOut, setDisplayDesktop, setDisplayMobile }
-  ),
-  withSize(),
+    { signIn, signOut, setDisplayDesktop, setDisplayMobile, setUserInfo }
+  )
 )(App);
 
