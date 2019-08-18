@@ -152,7 +152,7 @@ export const StepTwo = ({
             </Button>
           </>
         )}
-        {recognitionStatus === RECOGNITION_STATUS_DICTIONARY.FINISHED && (
+        {(recognitionStatus === RECOGNITION_STATUS_DICTIONARY.FINISHED || recognitionStatus === RECOGNITION_STATUS_DICTIONARY.SAVED) && (
           <Button onClick={toNextStepHandler} isPrimary>
             {texts.testBuilder.results}
           </Button>

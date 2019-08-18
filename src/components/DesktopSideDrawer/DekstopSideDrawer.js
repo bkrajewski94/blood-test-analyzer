@@ -67,7 +67,7 @@ const DesktopSideDrawer = props => {
           withSpacingBottom
         />
       </MenuItem>
-      <MenuItem to="/results">
+      <MenuItem to={`/${props.user.uid}/results`}>
         <MenuElement
           icon={<List />}
           text={texts.sidebar.list}
@@ -98,8 +98,6 @@ DesktopSideDrawer.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   authStatus: PropTypes.bool.isRequired
 };
-
-// export default withRouter(DesktopSideDrawer);
 
 const mapStateToProps = state => {
   return { user: state.user };

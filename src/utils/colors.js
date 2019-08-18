@@ -7,9 +7,10 @@ export const colors = {
   trout: "#505763", //dark gray
   thunderbird: "#b71414", // red
   torchRed: "#f41d1d", // light red
+  forestGreen: "#20BC25",// light green
   japaneseLaurel: "#198201", //dark green
   japaneseLaurelDark: "#247c03",  //darker green
-  portGore: "#25265E" // dark blue
+  portGore: "#25265E", // dark blue
 };
 
 

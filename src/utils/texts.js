@@ -33,8 +33,8 @@ export const texts = {
     storeTitle: "Are you sure that you want to save your data?",
     storeDescription: "You'll be able to delete them at any time you want",
     cancel: "Cancel",
-    save: "Save"
-
+    save: "Save",
+    complete: "Complete!"
   },
   test: {
     healthy: "The value expected for a healthy person",
@@ -64,6 +64,7 @@ export const texts = {
   }
 };
 
-export const testBuilder = {
-
+export const toastTexts = {
+  saved: "Successfully saved!",
+  error: "Oops! Something went wrong!"
 }

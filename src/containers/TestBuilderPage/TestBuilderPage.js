@@ -6,16 +6,19 @@ import { StepThree } from "./StepThree/StepThree";
 import { Page } from "../../components/Page/Page";
 import { readDiagnostyka } from "./readDiagnostyka/readDiagnostyka";
 import { firestore } from "../../firebase";
+import {
+  displaySuccessMessage,
+  displayErrorMessage
+} from "../../components/toastMessages/toastMessages";
+import { useToggleValue } from "../../hooks/hooks";
+import { toastTexts } from "../../utils/texts";
 
 const RECOGNITION_STATUS_DICTIONARY = {
   READY: "ready",
   PROCESSING: "processing",
-  FINISHED: "finished"
+  FINISHED: "finished",
+  SAVED: "saved"
 };
-
-const StepThreeMocks = JSON.parse(
-  '[{"value":0.0017112063713143719,"ranges":[{"description":"Anemia caused by B9 and B12 deficiency","expectedValue":0,"color":"#FFBB28"},{"description":"Anemia caused by B9, B12 and iron deficiency","expectedValue":0.25,"color":"#c42700"},{"description":"Anemia caused by iron deficiency","expectedValue":0.5,"color":"#FF8042"},{"description":"The value expected for a healthy person","expectedValue":0.75,"color":"#00C49F"},{"description":"Too high blood density","expectedValue":1,"color":"#0088FE"}],"title":"Red blood cels"},{"value":0.6288499015724472,"ranges":[{"description":"Severe immune system disorder","expectedValue":0,"color":"#c42700"},{"description":"Chronic/moderate immune sytem disorder","expectedValue":0.33,"color":"#FFBB28"},{"description":"The value expected for a healthy person","expectedValue":0.66,"color":"#00C49F"},{"description":"Acute/ongoing infection","expectedValue":1,"color":"#0088FE"}],"title":"White blood cells"},{"value":0.000014431421224568295,"ranges":[{"description":"Hypothyroidism","expectedValue":0,"color":"#FFBB28"},{"description":"The value expected for a healthy person","expectedValue":0.5,"color":"#00C49F"},{"description":"Hyperthyroidism","expectedValue":1,"color":"#FF8042"}],"title":"Thyriod"},{"value":1,"ranges":[{"description":"Type 1 diabetes","expectedValue":0,"color":"#c42700"},{"description":"The value expected for a healthy person","expectedValue":0.33,"color":"#00C49F"},{"description":"Insulin resistance","expectedValue":0.66,"color":"#FFBB28"},{"description":"Type 2 diabetes","expectedValue":1,"color":"#FF8042"}],"title":"Blood sugar"},{"value":0.9999999999988429,"ranges":[{"description":"The value expected for a healthy person","expectedValue":0,"color":"#00C49F"},{"description":"Active hashimoto disease","expectedValue":1,"color":"#c42700"}],"title":"Hashimoto"},{"value":2.777903598056023e-17,"ranges":[{"description":"The value expected for a healthy person","expectedValue":0,"color":"#00C49F"},{"description":"Active allergy","expectedValue":1,"color":"#FF8042"}],"title":"Allergies"}]'
-);
 
 export const TestBuilderPage = React.memo(props => {
   const [acceptedFiles, setAcceptedFiles] = useState([]);
@@ -25,6 +28,8 @@ export const TestBuilderPage = React.memo(props => {
     RECOGNITION_STATUS_DICTIONARY.READY
   );
   const [results, setResults] = useState({});
+  const showSaveResultsModal = useToggleValue(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toNextStepHandler = () => {
     setStep(prevStep => prevStep + 1);
@@ -54,18 +59,32 @@ export const TestBuilderPage = React.memo(props => {
     setRecognitionStatus(RECOGNITION_STATUS_DICTIONARY.FINISHED);
   };
 
-  const storeOnServerHandler = async () => {
-   const docRef  = await firestore.collection(`users/${props.match.params.uid}/results`).add({
-      StepThreeMocks
-    });
-  const doc = await docRef.get();
-  }
+  const storeOnServerHandler = () => {
+    setIsSubmitting(true);
+    showSaveResultsModal.setFalse();
+    firestore
+      .collection(`users/${props.match.params.uid}/results`)
+      .add({
+        results
+      })
+      .then(() => {
+        setRecognitionStatus(RECOGNITION_STATUS_DICTIONARY.SAVED);
+        setIsSubmitting(false);
+        displaySuccessMessage(toastTexts.saved);
+      })
+      .catch(() => {
+        setIsSubmitting(false);
+        displayErrorMessage(toastTexts.error);
+      });
+  };
 
-  console.log(props);
+  const onCompleteHandler = () => {
+    props.history.push(`/${props.match.params.uid}/results`);
+  }
 
   return (
     <Page>
-      {/* {step === 1 && (
+      {step === 1 && (
         <StepOne
           setAcceptedFiles={setAcceptedFiles}
           setRejectedFiles={setRejectedFiles}
@@ -87,9 +106,17 @@ export const TestBuilderPage = React.memo(props => {
         />
       )}
       {step === 3 && (
-        <StepThree data={results} toPrevStepHandler={toPrevStepHandler} />
-      )} */}
-      <StepThree data={StepThreeMocks} toPrevStepHandler={toPrevStepHandler} storeOnServerHandler={storeOnServerHandler}/>
+        <StepThree 
+          data={results} 
+          toPrevStepHandler={toPrevStepHandler} 
+          storeOnServerHandler={storeOnServerHandler}
+          showModal={showSaveResultsModal}
+          recognitionStatus={recognitionStatus}
+          RECOGNITION_STATUS_DICTIONARY={RECOGNITION_STATUS_DICTIONARY}
+          onCompleteHandler={onCompleteHandler}
+          isSubmitting={isSubmitting}
+          />
+      )}
     </Page>
   );
 });
