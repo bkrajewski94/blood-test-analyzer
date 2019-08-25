@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import reset from "styled-reset";
 import { connect } from "react-redux";
-import { compose } from 'redux';
+import { compose } from "redux";
 import { withRouter } from "react-router";
-import { withSize } from "react-sizeme";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { theme } from "./utils/theme";
 import { PageHeader } from "./components/PageHeader/PageHeader";
@@ -13,9 +14,17 @@ import { RoutePageContent } from "./routes";
 import MobileSideDrawer from "./components/MobileSideDrawer/MobileSideDrawer";
 import DesktopSideDrawer from "./components/DesktopSideDrawer/DekstopSideDrawer";
 import firebase from "./firebase";
-import { signIn, signOut, setDisplayMobile, setDisplayDesktop } from "./actions";
+import {
+  signIn,
+  signOut,
+  setDisplayMobile,
+  setDisplayDesktop,
+  setUserInfo
+} from "./actions";
 import { useToggleValue } from "./hooks/hooks";
 import { Spinner, SpinnerWrapper } from "./components/Spinner/Spinner";
+
+import styles from "./components/toastMessages/toastMessages.module.css";
 
 const GlobalStyle = createGlobalStyle`
   ${reset};
@@ -49,6 +58,7 @@ const App = props => {
     const subscribeAuth = firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         if (user.emailVerified) {
+          props.setUserInfo({ uid: user.uid, email: user.email });
           props.signIn();
         } else {
           firebase
@@ -76,20 +86,19 @@ const App = props => {
     return subscribeAuth;
   }, [props.authStatus]);
 
-
-  const setDisplayMode = (media) => {
-    if(media.matches) {
+  const setDisplayMode = media => {
+    if (media.matches) {
       props.setDisplayDesktop();
     } else {
       props.setDisplayMobile();
-  }
-  } 
+    }
+  };
 
   useEffect(() => {
     const media = window.matchMedia(`(min-width: ${theme.desktopWidth}px)`);
     media.addListener(() => setDisplayMode(media));
-    return media.removeListener(() => setDisplayMode(media))
-  },[])
+    return media.removeListener(() => setDisplayMode(media));
+  }, []);
 
   if (!isUserDataLoaded) {
     return (
@@ -111,8 +120,8 @@ const App = props => {
         <PageHeader
           toggleSidebar={
             props.displayMode === "desktop"
-            ? showDesktopSidebar.toggle
-            : showMobileSidebar.toggle
+              ? showDesktopSidebar.toggle
+              : showMobileSidebar.toggle
           }
         />
         {props.displayMode === "mobile" && (
@@ -129,10 +138,21 @@ const App = props => {
               authStatus={props.authStatus}
             />
           )}
-          <RoutePageContent
-            authStatus={props.authStatus}
-          />
+          <RoutePageContent authStatus={props.authStatus} />
         </PageContent>
+        <ToastContainer
+          position="top-right"
+          autoClose={1500}
+          hideProgressBar
+          newestOnTop
+          closeOnClick={false}
+          rtl={false}
+          pauseOnVisibilityChange={false}
+          draggable={false}
+          pauseOnHover={false}
+          closeButton={false}
+          className={styles.toastContainer}
+        />
       </>
     </ThemeProvider>
   );
@@ -146,8 +166,6 @@ export default compose(
   withRouter,
   connect(
     mapStateToProps,
-    { signIn, signOut, setDisplayDesktop, setDisplayMobile }
-  ),
-  withSize(),
+    { signIn, signOut, setDisplayDesktop, setDisplayMobile, setUserInfo }
+  )
 )(App);
-

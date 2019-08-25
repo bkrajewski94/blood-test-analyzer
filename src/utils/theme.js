@@ -12,9 +12,11 @@ export const theme = {
   spacingNormal: "1rem",
   spacingBig: "1.5rem",
   spacingContentMobile: "1.5rem",
+  spacingMobileWithHeader: "6.25rem",
   spacingLarge: "2rem",
   spacingHuge: "3rem",
   spacingContent: "3rem",
+  spacingWithHeader: "7.75rem",
   spacing: (size) => `${size}rem`,
 
   fontDefault: "Assistant",
@@ -28,5 +30,7 @@ export const theme = {
 
   desktopWidth: 750,
 
-  boxShadow: "0 4px 20px 0 rgba(37, 38, 94, 0.1)"
+  boxShadow: "0 4px 20px 0 rgba(37, 38, 94, 0.1)",
+
+  zIndexModal: 20, 
 };

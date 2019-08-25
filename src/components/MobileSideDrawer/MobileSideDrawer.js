@@ -4,6 +4,8 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { useEffect } from "react";
+import { connect } from "react-redux";
+import { compose } from 'redux';
 
 import { texts } from "../../utils/texts";
 import { BackDrop } from "../BackDrop/BackDrop";
@@ -25,7 +27,7 @@ const SideDrawer = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   transition: transform 0.3s ease-out;
   transform: translateX(${({ isOpen }) => (isOpen ? "0" : "-100%")});
-  z-index: 20;
+  z-index: ${({ theme }) => theme.zIndexModal};
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -101,10 +103,10 @@ const MobileSideDrawer = ({ isOpen, onClose, ...props }) => {
             withBorder
           />
         </MenuItem>
-        <MenuItem to="/new-test">
+        <MenuItem to={`/${props.user.uid}/new-test`}>
           <MenuElement icon={<Add />} text={texts.sidebar.add} withSpacingTop />
         </MenuItem>
-        <MenuItem to="/results">
+        <MenuItem to={`/${props.user.uid}/results`}>
           <MenuElement icon={<List />} text={texts.sidebar.list} />
         </MenuItem>
         {props.authStatus ? (
@@ -136,4 +138,14 @@ MobileSideDrawer.propTypes = {
   authStatus: PropTypes.bool.isRequired
 };
 
-export default withRouter(MobileSideDrawer);
+const mapStateToProps = state => {
+  return { user: state.user };
+};
+
+export default compose(
+  withRouter,
+  connect(
+    mapStateToProps,
+  )
+)(MobileSideDrawer);
+

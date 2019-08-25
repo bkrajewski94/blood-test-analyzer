@@ -35,5 +35,12 @@ const displayMode = (currentDisplayMode = getDisplay(), action) => {
   return currentDisplayMode;
 }
 
+const user = (data = {}, action) => {
+  if(action.type === "SET_USER_INFO") {
+    return action.data
+  }
+  return data
+}
 
-export default combineReducers({authStatus: authStatus, displayMode: displayMode});
+
+export default combineReducers({authStatus: authStatus, displayMode: displayMode, user: user});

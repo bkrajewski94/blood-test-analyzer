@@ -31,8 +31,10 @@ export const BuilderHeader = ({nextOnly, children}) => {
 
 
 export const ContentWrapper = styled.div`
-    padding-top: ${({theme}) => theme.spacing(7)};
-    padding-bottom: ${({theme}) => theme.spacingLarge};
+    padding-top: ${({theme}) => theme.spacingMobileWithHeader};
+    ${({ theme }) => theme.media.atTablet} {
+        padding-top: ${({theme}) => theme.spacingWithHeader};
+    }
     height: 100%;
     overflow-y: auto;
 `;

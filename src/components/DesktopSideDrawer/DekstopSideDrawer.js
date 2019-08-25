@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { compose } from 'redux';
 
 import { texts } from "../../utils/texts";
 import { MenuElement, MenuItem } from "../MenuElements/MenuElements";
@@ -58,14 +60,14 @@ const DesktopSideDrawer = props => {
           withSpacingBottom
         />
       </MenuItem>
-      <MenuItem to="/new-test">
+      <MenuItem to={`/${props.user.uid}/new-test`}>
         <MenuElement
           icon={<Add />}
           text={texts.sidebar.add}
           withSpacingBottom
         />
       </MenuItem>
-      <MenuItem to="/results">
+      <MenuItem to={`/${props.user.uid}/results`}>
         <MenuElement
           icon={<List />}
           text={texts.sidebar.list}
@@ -97,4 +99,13 @@ DesktopSideDrawer.propTypes = {
   authStatus: PropTypes.bool.isRequired
 };
 
-export default withRouter(DesktopSideDrawer);
+const mapStateToProps = state => {
+  return { user: state.user };
+};
+
+export default compose(
+  withRouter,
+  connect(
+    mapStateToProps,
+  )
+)(DesktopSideDrawer);

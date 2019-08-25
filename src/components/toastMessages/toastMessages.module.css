@@ -1,0 +1,19 @@
+.toastContainer {
+    max-width: 280px;
+    left: auto;
+    top: 1rem;
+}
+
+.toastError {
+    margin-bottom: 1rem;
+    background-color: #f41d1d;
+    border-radius: 5px;
+    padding-left: 12px;
+}
+
+.toastSuccess {
+    margin-bottom: 1 rem;
+    background-color: #20bc25;
+    border-radius: 5px;
+    padding-left: 12px;
+}

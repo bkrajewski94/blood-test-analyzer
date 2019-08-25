@@ -5,20 +5,31 @@ import { StepTwo } from "./StepTwo/StepTwo";
 import { StepThree } from "./StepThree/StepThree";
 import { Page } from "../../components/Page/Page";
 import { readDiagnostyka } from "./readDiagnostyka/readDiagnostyka";
+import { firestore } from "../../firebase";
+import {
+  displaySuccessMessage,
+  displayErrorMessage
+} from "../../components/toastMessages/toastMessages";
+import { useToggleValue } from "../../hooks/hooks";
+import { toastTexts } from "../../utils/texts";
 
-const recognitionStatusLibrary = ['ready', 'processing', 'finished'];
 const RECOGNITION_STATUS_DICTIONARY = {
-  READY: 'ready',
-  PROCESSING: 'processing',
-  FINISHED: 'finished',
+  READY: "ready",
+  PROCESSING: "processing",
+  FINISHED: "finished",
+  SAVED: "saved"
 };
 
 export const TestBuilderPage = React.memo(props => {
   const [acceptedFiles, setAcceptedFiles] = useState([]);
   const [rejectedFiles, setRejectedFiles] = useState([]);
   const [step, setStep] = useState(1);
-  const [recognitionStatus, setRecognitionStatus] = useState(RECOGNITION_STATUS_DICTIONARY.READY);
-  const [results, setResults] = useState({});
+  const [recognitionStatus, setRecognitionStatus] = useState(
+    RECOGNITION_STATUS_DICTIONARY.READY
+  );
+  const [results, setResults] = useState([]);
+  const showSaveResultsModal = useToggleValue(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toNextStepHandler = () => {
     setStep(prevStep => prevStep + 1);
@@ -41,11 +52,42 @@ export const TestBuilderPage = React.memo(props => {
   const readResultsHandler = (results, pattern) => {
     let data = {};
     switch (pattern) {
-      case 'diagnostyka':
+      case "diagnostyka":
         data = [...readDiagnostyka(results)];
     }
     setResults(data);
     setRecognitionStatus(RECOGNITION_STATUS_DICTIONARY.FINISHED);
+  };
+
+  const storeOnServerHandler = () => {
+    setIsSubmitting(true);
+    showSaveResultsModal.setFalse();
+    firestore
+      .collection(`users/${props.match.params.uid}/results`)
+      .add({
+        results
+      })
+      .then(() => {
+        setRecognitionStatus(RECOGNITION_STATUS_DICTIONARY.SAVED);
+        setIsSubmitting(false);
+        displaySuccessMessage(toastTexts.saved);
+      })
+      .catch(() => {
+        setIsSubmitting(false);
+        displayErrorMessage(toastTexts.error);
+      });
+  };
+
+  const onCompleteHandler = () => {
+    props.history.push(`/${props.match.params.uid}/results`);
+  }
+
+  const onTryAgainHandler = () => {
+    setAcceptedFiles([]);
+    setRejectedFiles([]);
+    setResults([]);
+    setRecognitionStatus(RECOGNITION_STATUS_DICTIONARY.READY);
+    setStep(1);
   };
 
   return (
@@ -71,7 +113,19 @@ export const TestBuilderPage = React.memo(props => {
           RECOGNITION_STATUS_DICTIONARY={RECOGNITION_STATUS_DICTIONARY}
         />
       )}
-      {step === 3 && <StepThree data={results} />}
+      {step === 3 && (
+        <StepThree 
+          data={results} 
+          toPrevStepHandler={toPrevStepHandler} 
+          storeOnServerHandler={storeOnServerHandler}
+          showModal={showSaveResultsModal}
+          recognitionStatus={recognitionStatus}
+          RECOGNITION_STATUS_DICTIONARY={RECOGNITION_STATUS_DICTIONARY}
+          onCompleteHandler={onCompleteHandler}
+          isSubmitting={isSubmitting}
+          onTryAgainHandler={onTryAgainHandler}
+          />
+      )}
     </Page>
   );
 });

@@ -9,6 +9,7 @@ import { Button } from "../../../components/ui-components/Button/Button";
 import { HorizontalBar } from "../../../components/ui-components/HorizontalBar/HorizontalBar";
 import { Tile } from "../../../components/ui-components/Tile/Tile";
 import { ReactComponent as TrashBin } from "../../../assets/trash.svg";
+import { texts } from "../../../utils/texts";
 import styles from "./StepTwo.module.css";
 
 const Wrapper = styled.div`
@@ -16,17 +17,20 @@ const Wrapper = styled.div`
   height: 100%;
 `;
 
+const Content = styled.div`
+  padding-bottom: ${({ theme }) => theme.spacingContentMobile};
+  ${({ theme }) => theme.media.atTablet} {
+      padding-bottom: ${({ theme }) => theme.spacingContent};
+  }
+`;
+
 const GalleryTile = styled(Tile)`
   margin: 0 auto;
   padding: ${({ theme }) => theme.spacingNormal};
   position: relative;
-
   width: 90%;
-    max-width: 700px;
-    margin: ${({ theme }) => `${theme.spacingContentMobile} auto`}; 
-    ${({theme}) => theme.media.atTablet}{
-        margin: ${({ theme }) => `${theme.spacingContent} auto`}; 
-    }
+  max-width: 700px;
+  margin: 0 auto;
 `;
 
 const TrashBinIcon = styled(TrashBin)`
@@ -58,6 +62,7 @@ const LoaderWrapperForPage = styled.div`
   min-width: 250px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: ${({ theme }) => theme.spacingNormal};
   display: block;
   ${({ theme }) => theme.media.atDesktop} {
     display: none;
@@ -131,10 +136,10 @@ export const StepTwo = ({
   return (
     <Wrapper>
       <BuilderHeader>
-        <Button onClick={toPrevStepHandler}>Prev step</Button>
+        <Button onClick={toPrevStepHandler}>{texts.testBuilder.prevStep}</Button>
         {recognitionStatus === RECOGNITION_STATUS_DICTIONARY.READY && (
           <Button onClick={doOCR} isPrimary>
-            Start now!
+            {texts.testBuilder.startNow}
           </Button>
         )}
         {recognitionStatus === RECOGNITION_STATUS_DICTIONARY.PROCESSING && (
@@ -143,41 +148,43 @@ export const StepTwo = ({
               <HorizontalBar percentageValue={countLoaderPercetageValue(progress)} />
             </LoaderWrapperForHeader>
             <Button disabled isPrimary>
-              Processing
+              {texts.testBuilder.processing}
             </Button>
           </>
         )}
-        {recognitionStatus === RECOGNITION_STATUS_DICTIONARY.FINISHED && (
+        {(recognitionStatus === RECOGNITION_STATUS_DICTIONARY.FINISHED || recognitionStatus === RECOGNITION_STATUS_DICTIONARY.SAVED) && (
           <Button onClick={toNextStepHandler} isPrimary>
-            See results
+            {texts.testBuilder.results}
           </Button>
         )}
       </BuilderHeader>
       <ContentWrapper>
-        {recognitionStatus === RECOGNITION_STATUS_DICTIONARY.PROCESSING && (
-          <LoaderWrapperForPage>
-            <HorizontalBar percentageValue={countLoaderPercetageValue(progress)} />
-          </LoaderWrapperForPage>
-        )}
-        <GalleryTile>
-          <TrashBinIcon
-            onClick={() =>
-              deleteImageHandler(gallery.current.getCurrentIndex())
-            }
-          />
-          <ImageGallery
-            items={images}
-            showBullets={true}
-            showIndex={true}
-            showThumbnails={false}
-            lazyLoad={true}
-            showPlayButton={false}
-            useBrowserFullscreen={true}
-            ref={i => (gallery.current = i)}
-            onScreenChange = {fullScreenElement => !!fullScreenElement ? setFullScreen(true) : setFullScreen(false)}
-            additionalClass={isFullScreen ? styles.imageGalleryFullscreen : null}
-          />
-        </GalleryTile>
+        <Content>
+          {recognitionStatus === RECOGNITION_STATUS_DICTIONARY.PROCESSING && (
+            <LoaderWrapperForPage>
+              <HorizontalBar percentageValue={countLoaderPercetageValue(progress)} />
+            </LoaderWrapperForPage>
+          )}
+          <GalleryTile>
+            <TrashBinIcon
+              onClick={() =>
+                deleteImageHandler(gallery.current.getCurrentIndex())
+              }
+            />
+            <ImageGallery
+              items={images}
+              showBullets={true}
+              showIndex={true}
+              showThumbnails={false}
+              lazyLoad={true}
+              showPlayButton={false}
+              useBrowserFullscreen={true}
+              ref={i => (gallery.current = i)}
+              onScreenChange = {fullScreenElement => !!fullScreenElement ? setFullScreen(true) : setFullScreen(false)}
+              additionalClass={isFullScreen ? styles.imageGalleryFullscreen : null}
+            />
+          </GalleryTile>
+        </Content>
       </ContentWrapper>
     </Wrapper>
   );

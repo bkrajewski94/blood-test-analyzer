@@ -21,3 +21,10 @@ export const setDisplayDesktop = () => {
         type: 'DESKTOP'
     }
 }
+
+export const setUserInfo = (data) => {
+    return {
+        type: "SET_USER_INFO",
+        data: data
+    }
+}

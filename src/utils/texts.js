@@ -23,7 +23,21 @@ export const texts = {
     selectResults: "Please select your lab result files below.",
     startTest: "Start your new test now!",
     dragDrop: "Please drag & drop or select your lab result files below.",
-    select: "Select files"
+    select: "Select files",
+    nextStep: "Next step",
+    prevStep: "Prev step",
+    startNow: "Start now!",
+    processing: "Processing",
+    results: "See results",
+    store: "Save data",
+    storeTitle: "Are you sure that you want to save your data?",
+    storeDescription: "You'll be able to delete them at any time you want",
+    cancel: "Cancel",
+    save: "Save",
+    complete: "Complete!",
+    noResults: "Oops! Something went wrong!",
+    noResultsDescription: "We were not able to interpret the data from the files you loaded. Please try again with other files.",
+    tryAgain: "Try again!"
   },
   test: {
     healthy: "The value expected for a healthy person",
@@ -49,10 +63,17 @@ export const texts = {
     diabetesType2: "Type 2 diabetes",
     insulinResistance: "Insulin resistance",
     allergies: "Allergies",
-    allergyActive: "Active allergy"
+    allergyActive: "Active allergy",
   }
 };
 
-export const testBuilder = {
+export const toastTexts = {
+  saved: "Successfully saved!",
+  error: "Oops! Something went wrong!"
+}
 
+export const previousResults = {
+  noResults: "No results found!",
+  noResultsDescription: "But don't worry. You can start new test any time you want!",
+  newTest: "Start new test!"
 }
