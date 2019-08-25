@@ -27,7 +27,7 @@ export const TestBuilderPage = React.memo(props => {
   const [recognitionStatus, setRecognitionStatus] = useState(
     RECOGNITION_STATUS_DICTIONARY.READY
   );
-  const [results, setResults] = useState({});
+  const [results, setResults] = useState([]);
   const showSaveResultsModal = useToggleValue(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -82,6 +82,14 @@ export const TestBuilderPage = React.memo(props => {
     props.history.push(`/${props.match.params.uid}/results`);
   }
 
+  const onTryAgainHandler = () => {
+    setAcceptedFiles([]);
+    setRejectedFiles([]);
+    setResults([]);
+    setRecognitionStatus(RECOGNITION_STATUS_DICTIONARY.READY);
+    setStep(1);
+  };
+
   return (
     <Page>
       {step === 1 && (
@@ -115,6 +123,7 @@ export const TestBuilderPage = React.memo(props => {
           RECOGNITION_STATUS_DICTIONARY={RECOGNITION_STATUS_DICTIONARY}
           onCompleteHandler={onCompleteHandler}
           isSubmitting={isSubmitting}
+          onTryAgainHandler={onTryAgainHandler}
           />
       )}
     </Page>

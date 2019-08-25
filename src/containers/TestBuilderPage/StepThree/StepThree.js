@@ -9,6 +9,7 @@ import { Button } from "../../../components/ui-components/Button/Button";
 import { texts } from "../../../utils/texts";
 import { StoreDataModal } from "./StoreDataModal";
 import { useToggleValue } from "../../../hooks/hooks";
+import { EmptyScreen } from "./EmptyScreen";
 
 const Wrapper = styled.div`
   position: relative;
@@ -120,7 +121,8 @@ export const StepThree = ({
   onCompleteHandler,
   recognitionStatus,
   RECOGNITION_STATUS_DICTIONARY,
-  isSubmitting
+  isSubmitting,
+  onTryAgainHandler
 }) => {
   const activeIndexes = data.map(element =>
     findClosestRange(element.value, element.ranges)
@@ -144,40 +146,48 @@ export const StepThree = ({
               {texts.testBuilder.complete}
             </Button>
           ) : (
-            <Button disabled={isSubmitting} onClick={showModal.setTrue} isPrimary>
+            <Button
+              disabled={isSubmitting || !data || !data.length}
+              onClick={showModal.setTrue}
+              isPrimary
+            >
               {texts.testBuilder.store}
             </Button>
           )}
         </BuilderHeader>
         <ContentWrapper>
-          <ResultsWrapper>
-            {data.map((element, index) => (
-              <PieChartTile key={element.title.split(" ").join("")}>
-                <PieChartTitle>{element.title}</PieChartTitle>
-                <PieChartSection>
-                  <PieChartWrapper>
-                    <PieChart
-                      data={getPieChartData(element.ranges)}
-                      angle={getPointerAngle(
-                        activeIndexes[index],
-                        element.ranges.length
-                      )}
-                    />
-                  </PieChartWrapper>
-                  <Legend>
-                    {element.ranges.map((range, i) => (
-                      <LegendElement
-                        key={range.color}
-                        color={range.color}
-                        title={range.description}
-                        isActive={false}
+          {!data || !data.length ? (
+            <EmptyScreen onClick={onTryAgainHandler} />
+          ) : (
+            <ResultsWrapper>
+              {data.map((element, index) => (
+                <PieChartTile key={element.title.split(" ").join("")}>
+                  <PieChartTitle>{element.title}</PieChartTitle>
+                  <PieChartSection>
+                    <PieChartWrapper>
+                      <PieChart
+                        data={getPieChartData(element.ranges)}
+                        angle={getPointerAngle(
+                          activeIndexes[index],
+                          element.ranges.length
+                        )}
                       />
-                    ))}
-                  </Legend>
-                </PieChartSection>
-              </PieChartTile>
-            ))}
-          </ResultsWrapper>
+                    </PieChartWrapper>
+                    <Legend>
+                      {element.ranges.map((range, i) => (
+                        <LegendElement
+                          key={range.color}
+                          color={range.color}
+                          title={range.description}
+                          isActive={false}
+                        />
+                      ))}
+                    </Legend>
+                  </PieChartSection>
+                </PieChartTile>
+              ))}
+            </ResultsWrapper>
+          )}
         </ContentWrapper>
       </Wrapper>
     </>

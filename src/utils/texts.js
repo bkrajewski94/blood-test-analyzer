@@ -34,7 +34,10 @@ export const texts = {
     storeDescription: "You'll be able to delete them at any time you want",
     cancel: "Cancel",
     save: "Save",
-    complete: "Complete!"
+    complete: "Complete!",
+    noResults: "Oops! Something went wrong!",
+    noResultsDescription: "We were not able to interpret the data from the files you loaded. Please try again with other files.",
+    tryAgain: "Try again!"
   },
   test: {
     healthy: "The value expected for a healthy person",
@@ -60,11 +63,17 @@ export const texts = {
     diabetesType2: "Type 2 diabetes",
     insulinResistance: "Insulin resistance",
     allergies: "Allergies",
-    allergyActive: "Active allergy"
+    allergyActive: "Active allergy",
   }
 };
 
 export const toastTexts = {
   saved: "Successfully saved!",
   error: "Oops! Something went wrong!"
+}
+
+export const previousResults = {
+  noResults: "No results found!",
+  noResultsDescription: "But don't worry. You can start new test any time you want!",
+  newTest: "Start new test!"
 }
