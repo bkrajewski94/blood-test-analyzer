@@ -74,6 +74,6 @@ export const toastTexts = {
 
 export const previousResults = {
   noResults: "No results found!",
-  noResultsDescription: "But don't worry. You can start new test any time you want!",
+  noResultsDescription: "But don't worry. You can start a new test any time you want!",
   newTest: "Start new test!"
 }
