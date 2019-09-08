@@ -5,10 +5,18 @@ import PropTypes from "prop-types";
 const ButtonComponent = styled.button`
     padding: ${({ theme }) => `${theme.spacingTiny} ${theme.spacingLarge}`};
     font-size: ${({ theme }) => theme.fontSizeNormal};
-    border: ${({isPrimary, theme}) => isPrimary ? `3px solid ${theme.colors.japaneseLaurelDark}` : `3px solid ${theme.colors.trout}`};
+    border: ${({isPrimary, isDangerous, theme}) => {
+        if(isPrimary) return `3px solid ${theme.colors.japaneseLaurelDark}`;
+        if(isDangerous) return `3px solid ${theme.colors.thunderbird}`;
+        return `3px solid ${theme.colors.trout}`
+    }};
     border-radius: 5px;
-    background-color: ${({isPrimary, theme}) => isPrimary ? theme.colors.japaneseLaurel: theme.colors.white};
-    color: ${({isPrimary, theme}) => isPrimary ? theme.colors.white : theme.colors.trout};
+    background-color: ${({isPrimary, isDangerous, theme}) => {
+        if(isPrimary) return theme.colors.japaneseLaurel;
+        if(isDangerous) return theme.colors.thunderbird;
+        return theme.colors.white
+    }};
+    color: ${({isPrimary, isDangerous, theme}) => isPrimary || isDangerous ? theme.colors.white : theme.colors.trout};
     margin-left: ${({ theme }) => theme.spacingNormal}; 
     margin-right: ${({ theme }) => theme.spacingNormal}; 
     opacity: ${({disabled}) => disabled ? '0.5' : '1'};

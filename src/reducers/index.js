@@ -42,5 +42,32 @@ const user = (data = {}, action) => {
   return data
 }
 
+const testResults = (results = {}, action) => {
+  switch(action.type) {
+    case "SAVE_TEST_RESULT": {
+      return {
+        ...results,
+        [action.payload.id]: action.payload.data,
+      };
+    }
 
-export default combineReducers({authStatus: authStatus, displayMode: displayMode, user: user});
+    default:
+      return results;
+  }
+}
+
+const previewResults = (results = {}, action) => {
+  switch(action.type) {
+    case "SAVE_RESULTS_PREVIEW": {
+      return {
+        ...results,
+        [action.payload.id]: action.payload.data,
+      };
+    }
+
+    default:
+      return results;
+  }
+}
+
+export default combineReducers({authStatus, displayMode, user, testResults, previewResults});
