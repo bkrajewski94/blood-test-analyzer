@@ -2,7 +2,7 @@ import React from 'react';
 import { PieChart, Pie, Cell } from 'recharts';
 import styled from "styled-components";
 
-import { ReactComponent as PointerComponent } from "../../../assets/pointer.svg";
+import { ReactComponent as PointerComponent } from "../../assets/pointer.svg";
 
 const PieChartWrapper = styled.div`
   position: relative;

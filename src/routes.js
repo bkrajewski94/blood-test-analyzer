@@ -9,6 +9,7 @@ import { ResetPasswordPage } from "./containers/ResetPasswordPage/ResetPasswordP
 import { ResetConfirm } from "./components/ResetPassword/ResetConfirm/ResetConfirm";
 import { TestBuilderPage } from "./containers/TestBuilderPage/TestBuilderPage";
 import { PreviousResultsPage } from "./containers/PreviousResultsPage/PreviousResultsPage";
+import ResultsPage from "./containers/ResultsPage/ResultsPage";
 
 export const RoutePageContent = ({ authStatus }) => {
   if (authStatus) {
@@ -17,6 +18,7 @@ export const RoutePageContent = ({ authStatus }) => {
         <Route path="/home" render={() => <HomePage />} />
         <Route path="/user" render={() => <h1>USER</h1>} />
         <Route path="/:uid/new-test" render={props => <TestBuilderPage {...props}/>} />
+        <Route path="/:uid/results/:testId" render={props => <ResultsPage {...props} />} />
         <Route path="/:uid/results" render={props => <PreviousResultsPage {...props} />} />
         <Redirect from="/" to="/home" />
       </Switch>

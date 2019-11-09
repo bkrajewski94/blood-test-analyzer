@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { theme } from "./utils/theme";
-import { PageHeader } from "./components/PageHeader/PageHeader";
+import { MainHeader } from "./components/MainHeader/MainHeader";
 import { RoutePageContent } from "./routes";
 import MobileSideDrawer from "./components/MobileSideDrawer/MobileSideDrawer";
 import DesktopSideDrawer from "./components/DesktopSideDrawer/DekstopSideDrawer";
@@ -117,7 +117,7 @@ const App = props => {
     <ThemeProvider theme={theme}>
       <>
         <GlobalStyle />
-        <PageHeader
+        <MainHeader
           toggleSidebar={
             props.displayMode === "desktop"
               ? showDesktopSidebar.toggle

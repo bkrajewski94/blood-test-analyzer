@@ -69,11 +69,24 @@ export const texts = {
 
 export const toastTexts = {
   saved: "Successfully saved!",
+  deleted: "Successfully deleted!",
   error: "Oops! Something went wrong!"
 }
 
 export const previousResults = {
   noResults: "No results found!",
-  noResultsDescription: "But don't worry. You can start new test any time you want!",
+  noResultsDescription: "But don't worry. You can start a new test any time you want!",
   newTest: "Start new test!"
+}
+
+export const results = {
+  deleteTitle: "Are you sure you want to delete this reslult?",
+  deleteDescription: "You wont be able to restore it.",
+  cancel: "Cancel",
+  delete: "Delete",
+}
+
+export const errorTexts = {
+  errorHeader: "Oops! Something went wrong!",
+  result: "The result your are trying to see doesn't exist, or you don't have sufficient permissions to see it"
 }

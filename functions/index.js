@@ -17,3 +17,32 @@ exports.create = functions.firestore
 
     return userRef.add(newSummaryElement);
   });
+
+
+exports.delete = functions.firestore
+  .document('users/{userId}/results/{resultId}')
+  .onDelete(async (snapshot, context) => {
+    const { userId, resultId } = context.params;
+    const resultSummaryRef = firestore.collection(`users/${userId}/resultsSummary`).where("resultId", "==", resultId);
+    const resultSnapshot = await resultSummaryRef.get();
+
+    if (resultSnapshot.empty) return;
+
+    return resultSnapshot.forEach(doc => {
+      doc.ref.delete();
+    });
+  })
+
+exports.summaryDelete = functions.firestore
+  .document('users/{userId}/resultsSummary/{summaryId}')
+  .onDelete(async (snapshot, context) => {
+    const { resultId } = snapshot.data();
+    const { userId } = context.params;
+
+    const resultRef = firestore.doc(`users/${userId}/results/${resultId}`)
+    const resultSnapshot = await resultRef.get();
+
+    if (!resultSnapshot.exists) return;
+
+    return resultRef.delete();
+  })
