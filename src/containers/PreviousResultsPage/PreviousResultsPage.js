@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import moment from "moment";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import InfiniteScroll from "react-infinite-scroller";
 
 import {
   Table,
@@ -28,6 +29,7 @@ const TableWrapper = styled.div`
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: ${({ theme }) => theme.spacingNormal};
   margin-top: ${({ theme }) => theme.spacingContentMobile};
   ${({ theme }) => theme.media.atTablet} {
     margin-top: ${({ theme }) => theme.spacingContent};
@@ -56,119 +58,161 @@ const OpenButtonIcon = styled(OpenDocumentIcon)`
 
 const OpenButton = styled(Link).attrs({
   children: <OpenButtonIcon />
-})`
-`;
+})``;
+
+const DATA_AMOUNT_BASIS = 15;
 
 export const PreviousResultsPage = props => {
   const [data, setData] = useState([]);
+  const dataLimit = useRef(DATA_AMOUNT_BASIS);
+  const hasMoreData = useRef(true);
   const [idToDelete, setIdToDelete] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => { 
+  useEffect(() => {
     const unsubscribe = firestore
       .collection(`users/${props.match.params.uid}/resultsSummary`)
       .orderBy("createdAt", "desc")
+      .limit(dataLimit.current)
       .onSnapshot(snapshot => {
-        const previousData = snapshot.docs.map(doc => {
-            const id = doc.id;
-            const { createdAt, resultId } = doc.data();
-            return {
-              id,
-              data: {
-                createdAt: moment
-                  .unix(createdAt.seconds)
-                  .format("YYYY-MM-DD (HH:mm)"),
-                resultId
-              }
+        const data = snapshot.docs.map(doc => {
+          const id = doc.id;
+          const { createdAt, resultId } = doc.data();
+          return {
+            id,
+            data: {
+              createdAt: moment
+                .unix(createdAt.seconds)
+                .format("YYYY-MM-DD (HH:mm)"),
+              resultId
             }
+          };
         });
-        setData(previousData);
+
+        if(snapshot.size < dataLimit.current) {
+          hasMoreData.current = false;
+        } else if(hasMoreData.current === false) {
+          hasMoreData.current = true;
+        }
+        setData(data);
         setIsLoading(false);
       });
 
     return unsubscribe;
-  },[])
+  }, []);
 
   const onStartTestHandler = () => {
     props.history.push(`/${props.match.params.uid}/new-test`);
   };
 
-  const onDeleteButtonClick = (id) => {
+  const onDeleteButtonClick = id => {
     setIdToDelete(id);
     setShowModal(true);
-  }
+  };
 
   const closeModalHandler = () => {
     setIdToDelete("");
     setShowModal(false);
-  }
+  };
 
   const deleteResultHandler = () => {
-    console.log(`users/${props.match.params.uid}/resultsSummary/${idToDelete}`);
     firestore
       .doc(`users/${props.match.params.uid}/resultsSummary/${idToDelete}`)
       .delete()
       .then(() => {
-        // setIsSubmitting(false);
         closeModalHandler();
         displaySuccessMessage(toastTexts.deleted);
       })
-      .catch((error) => {
-        // setIsSubmitting(false);
-        console.log(error);
+      .catch(error => {
         closeModalHandler();
         displayErrorMessage(toastTexts.error);
       });
-  }
+  };
 
-  if(isLoading) return null;
+  const loadMoreDataHandler = () => {
+
+    firestore.collection(`users/${props.match.params.uid}/resultsSummary`)
+      .orderBy("createdAt", "desc")
+      .limit(dataLimit.current + DATA_AMOUNT_BASIS)
+      .get()
+      .then(snapshot => {
+        const data = snapshot.docs.map(doc => {
+          const id = doc.id;
+          const { createdAt, resultId } = doc.data();
+          return {
+            id,
+            data: {
+              createdAt: moment
+                .unix(createdAt.seconds)
+                .format("YYYY-MM-DD (HH:mm)"),
+              resultId
+            }
+          };
+        });
+
+        if(snapshot.size < dataLimit.current + DATA_AMOUNT_BASIS) {
+          hasMoreData.current = false;
+        } 
+        dataLimit.current += DATA_AMOUNT_BASIS;
+        setData(data);
+      })
+    
+  };
+
+  window.firestore = firestore;
+
+  if (isLoading) return null;
 
   return (
     <>
       {showModal && (
-          <DeleteResultModal
-            closeModalHandler={closeModalHandler}
-            deleteResultHandler={deleteResultHandler}
-          />
+        <DeleteResultModal
+          closeModalHandler={closeModalHandler}
+          deleteResultHandler={deleteResultHandler}
+        />
       )}
       <Page>
-          {data.length ? (
-              <TableWrapper>
-                  <Table>
-                      <TableHeader center>
-                          <TableRow>
-                              <TableHeaderCell width="50%">
-                                  Date:
-                              </TableHeaderCell>
-                              <TableHeaderCell>
-                                  Inspect:
-                              </TableHeaderCell>
-                              <TableHeaderCell>
-                                  Delete:
-                              </TableHeaderCell>
-                          </TableRow>
-                      </TableHeader>
-                      <TableBody center>
-                          {data.map(element => (
-                              <TableRow key={element.id}>
-                                  <TableCell>
-                                      {element.data.createdAt}
-                                  </TableCell>
-                                  <TableCell relative hover>
-                                      <OpenButton to={`/${props.match.params.uid}/results/${element.data.resultId}`} />
-                                  </TableCell>
-                                  <TableCell relative hover>
-                                      <DeleteButton onClick={() => onDeleteButtonClick(element.id)}/>
-                                  </TableCell>
-                              </TableRow>
-                          ))}
-                      </TableBody>
-                  </Table>
-              </TableWrapper> 
-          ) : (
-              <ResultsEmptyScreen onClick={onStartTestHandler} />
-          )}
+        {data.length ? (
+          <InfiniteScroll
+            initialLoad={false}
+            loadMore={loadMoreDataHandler}
+            hasMore={hasMoreData.current}
+            threshold={0}
+            useWindow={false}
+          >
+            <TableWrapper>
+              <Table>
+                <TableHeader center>
+                  <TableRow>
+                    <TableHeaderCell width="50%">Date:</TableHeaderCell>
+                    <TableHeaderCell>Inspect:</TableHeaderCell>
+                    <TableHeaderCell>Delete:</TableHeaderCell>
+                  </TableRow>
+                </TableHeader>
+                <TableBody center>
+                  {data.map(element => (
+                    <TableRow key={element.id}>
+                      <TableCell>{element.data.createdAt}</TableCell>
+                      <TableCell relative hover>
+                        <OpenButton
+                          to={`/${props.match.params.uid}/results/${element.data.resultId}`}
+                        />
+                      </TableCell>
+                      <TableCell relative hover>
+                        <DeleteButton
+                          onClick={() => onDeleteButtonClick(element.id)}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableWrapper>
+         </InfiniteScroll>
+        ) : (
+          <ResultsEmptyScreen onClick={onStartTestHandler} />
+        )}
       </Page>
     </>
   );

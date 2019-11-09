@@ -81,19 +81,15 @@ const ResultsPage = props => {
       .doc(`users/${props.match.params.uid}/results/${props.match.params.testId}`)
       .delete()
       .then(() => {
-        // setIsSubmitting(false);
         showModal.setFalse();
+        props.history.replace(`/${props.match.params.uid}/results`);
         displaySuccessMessage(toastTexts.deleted);
       })
       .catch((error) => {
-        // setIsSubmitting(false);
-        console.log(error);
         showModal.setFalse();
         displayErrorMessage(toastTexts.error);
       });
   }
-
-  window.firestore = firestore;
 
   if (isLoading) return null;
 
@@ -102,7 +98,7 @@ const ResultsPage = props => {
       <ErrorPage description={errorTexts.result}/>
     )
   }
-
+  
   return (
     <>
       {showModal.value && (
