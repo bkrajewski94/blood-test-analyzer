@@ -1,5 +1,8 @@
-Project was not finished. Only supported data format: https://diag.pl/
+Project in progress. Only supported data format: https://diag.pl/
 Sample files included in the bundle
+
+See live: https://blood-test-analyzer.web.app/
+In order to run the project create .env file based on .env.example
 
 ## Available Scripts
 
