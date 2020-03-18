@@ -1,4 +1,5 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Project was not finished. Only supported data format: https://diag.pl/
+Sample files included in the bundle
 
 ## Available Scripts
 
